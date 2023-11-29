@@ -1,5 +1,5 @@
-function Asteroid(health) {
-    this.health = health;
+function Asteroid(points) {
+    this.points = points;
     this.speed = 0
     this.angularVel = 0
 };
@@ -11,9 +11,9 @@ function SmallAsteroid() {
 };
 
 function MediumAsteroid() {
-    Asteroid.call(this, 200);
+    Asteroid.call(this, 50);
 };
 
 function LargeAsteroid() {
-    Asteroid.call(this, 200);
+    Asteroid.call(this, 20);
 };
