@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'/>
 
-    <!-- Vertex Shader script in GLSL -->
-     <script id="vertex-shader" type="x-shader/x-vertex">
+<head>
+  <meta charset='utf-8' />
+
+  <!-- Vertex Shader script in GLSL -->
+  <script id="vertex-shader" type="x-shader/x-vertex">
       attribute vec3 position;
       attribute vec3 normal;
       attribute vec3 color;
@@ -68,8 +69,8 @@
       }
     </script>
 
-    <!-- Fragment Shader script in GLSL -->
-    <script id="fragment-shader" type="x-shader/x-vertex">
+  <!-- Fragment Shader script in GLSL -->
+  <script id="fragment-shader" type="x-shader/x-vertex">
     	precision mediump float;
 
       // Passed from vertex shader
@@ -151,18 +152,19 @@
         );
       }
     </script>
+  <div id="imageCollection" style="height:0"></div>
 
-    <script type="text/javascript" src="textures.js"></script>
-    <script type="text/javascript" src="matrix.js"></script>
-    <script type="text/javascript" src="light.js"></script>
-    <script type="text/javascript" src="material.js"></script>
-    <script type="text/javascript" src="model.js"></script>
-    <script type="text/javascript" src="scene.js"></script>
-    <script type="text/javascript" src="script.js"></script>
-  </head>
-  <body style='margin:0px' onload='main()'>
-    <canvas id='canvas-cg-lab'
-            style='position: absolute; background-color: black;'>
-	  </canvas>
-  </body>
+  <script type="text/javascript" src="./support/matrix.js"></script>
+  <script type="text/javascript" src="./support/light.js"></script>
+  <script type="text/javascript" src="./support/material.js"></script>
+  <script type="text/javascript" src="./support/model.js"></script>
+  <script type="text/javascript" src="./support/scene.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+</head>
+
+<body style='margin:0px' onload='main()'>
+  <canvas id='canvas-cg-lab' style='position: absolute; background-color: black;'>
+  </canvas>
+</body>
+
 </html>

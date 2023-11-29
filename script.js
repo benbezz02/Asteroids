@@ -81,6 +81,11 @@ var main = function () {
   catch (e) { alert("No webGL compatibility detected!"); return false; }
 
   //--------------------------------------------------------------------------------------------------------//
+  // Game Set up
+  //--------------------------------------------------------------------------------------------------------//
+  // var player = new Player();
+
+  //--------------------------------------------------------------------------------------------------------//
   // Set up scene
   //--------------------------------------------------------------------------------------------------------//
   scene = new Scene();
@@ -89,40 +94,25 @@ var main = function () {
   //--------------------------------------------------------------------------------------------------------//
   // Set up geometry
   //--------------------------------------------------------------------------------------------------------//
-  var sphere = makeSphere([0, 0, 0], 2, 50, 50, [0, 0, 0]);
-
-  // Create two objects, reusing the same model geometry
-  var model = new Model();
-  model.name = "sphere";
-  model.index = sphere.index;
-  model.vertex = sphere.vertex;
-  model.compile(scene);
-
-  var model2 = new Model();
-  model2.name = "sphere2";
-  model2.index = sphere.index;
-  model2.vertex = sphere.vertex;
-  model2.compile(scene);
-
   var quad = makeQuad(
     [[-5, -5, 0], [5, -5, 0], [5, 5, 0], [-5, 5, 0]],
     [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
     [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
     [[0, 0], [1, 0], [1, 1], [0, 1]]);
 
-  var model3 = new Model();
-  model3.name = "quad";
-  model3.index = quad.index;
-  model3.vertex = quad.vertex;
-  model3.compile(scene);
+  var model = new Model();
+  model.name = "quad";
+  model.index = quad.index;
+  model.vertex = quad.vertex;
+  model.compile(scene);
 
   //--------------------------------------------------------------------------------------------------------//
   // Set up lights
   //--------------------------------------------------------------------------------------------------------//
   var light = new Light();
   //light.type = Light.LIGHT_TYPE.SPOT;
-  light.type = Light.LIGHT_TYPE.POINT;
-  //light.type = Light.LIGHT_TYPE.DIRECTIONAL;
+  // light.type = Light.LIGHT_TYPE.POINT;
+  light.type = Light.LIGHT_TYPE.DIRECTIONAL;
   light.setDiffuse([2, 2, 2]);
   light.setSpecular([1, 1, 1]);
   light.setAmbient([0.2, 0.2, 0.2]);
@@ -135,60 +125,40 @@ var main = function () {
   //--------------------------------------------------------------------------------------------------------//
   // Set up textures and materials
   //--------------------------------------------------------------------------------------------------------//
-  var textureList = new Textures();
   var material = new Material();
 
-  material.setAlbedo(gl, textureList.venus);
-  material.setShininess(96.0);
-  material.setSpecular([1, 1, 1]);
-  material.setAmbient([1, 1, 1]);
+  const shipImage = new Image();
+  shipImage.src = '/Asteroids/assets/flare.png';
+  shipImage.onload = () => {
+    //material3.setAlbedo(gl, shipImage);
+    console.log("Ship Loaded");
+  };
+
+  material.setAlbedo(gl, shipImage);
   material.setDiffuse([1, 1, 1]);
+  material.setShininess(8.0);
+  material.setSpecular([1, 1, 1]);
+  material.setAmbient([0.2, 0.2, 0.2]);
   material.bind(gl, scene.shaderProgram);
-
-  var material2 = new Material();
-
-  material2.setAlbedo(gl, textureList.earth);
-  material2.setDiffuse([1, 1, 1]);
-  material2.setShininess(0.0);
-  material2.setSpecular([0, 0, 0]);
-  material2.setAmbient([1, 1, 1]);
-  material2.bind(gl, scene.shaderProgram);
-
-  var material3 = new Material();
-
-  material3.setAlbedo(gl, textureList.earth);
-  material3.setDiffuse([1, 1, 1]);
-  material3.setShininess(8.0);
-  material3.setSpecular([1, 1, 1]);
-  material3.setAmbient([0.2, 0.2, 0.2]);
-  material3.bind(gl, scene.shaderProgram);
 
   //--------------------------------------------------------------------------------------------------------//
   // Set up scene graph
   //--------------------------------------------------------------------------------------------------------//
+
   model.material = material;
-  model2.material = material2;
-  model3.material = material3;
 
   var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
-  var sphereNode = scene.addNode(lightNode, model, "sphereNode", Node.NODE_TYPE.MODEL);
-  var sphereNode2 = scene.addNode(sphereNode, model2, "sphereNode2", Node.NODE_TYPE.MODEL);
-  // var quadNode = scene.addNode(lightNode, model3, "quadNode", Node.NODE_TYPE.MODEL);
+  var quadNode = scene.addNode(lightNode, model, "quadNode", Node.NODE_TYPE.MODEL);
 
   //--------------------------------------------------------------------------------------------------------//
   // Set up animation
   //--------------------------------------------------------------------------------------------------------//
   var ang = 0;
 
-  sphereNode2.animationCallback = function (deltaTime) {
+  quadNode.animationCallback = function (deltaTime) {
     ang += deltaTime / 1000;
     this.transform[13] = Math.cos(ang) * 3;
   };
-
-  // quadNode.animationCallback = function(deltaTime) {
-  //   ang += deltaTime / 1000;
-  //   this.transform[13] = Math.cos(ang) * 3;
-  // };
 
   var Vec3 = matrixHelper.vector3;
   var Mat4x4 = matrixHelper.matrix4;
@@ -212,10 +182,8 @@ var main = function () {
   var animate = function () {
     theta += 0.01; // Increment rotation angle
 
-    Mat4x4.makeTranslation(sphereNode2.transform, [10, 0, 0]);
-
-    Mat4x4.makeRotationY(viewTransform, theta);  // rotate camera about y
-    Mat4x4.multiplyPoint(observer, viewTransform, [0, 0, 15]);  // apply camera rotation   
+    //Mat4x4.makeRotationY(viewTransform, theta);  // rotate camera about y
+    //Mat4x4.multiplyPoint(observer, viewTransform, [0, 0, 15]);  // apply camera rotation   
     scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
 
     scene.beginFrame();
@@ -223,6 +191,7 @@ var main = function () {
     scene.draw();
     scene.endFrame();
 
+    // window.onkeydown = player.checkForMovement()
     window.requestAnimationFrame(animate);
   };
 
