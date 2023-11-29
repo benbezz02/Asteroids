@@ -4,7 +4,21 @@ const STATES = {
     GAME_OVER_MODE: "Game Over Mode",
 };
 
+function StateMachine() {
+    this.currentState = STATES.ATTRACT_MODE;
+}
+
+StateMachine.prototype.changeState = function (state) {
+    if (STATES[state]) {
+        this.currentState = state;
+    } else {
+        console.error(`Invalid state entered: ${state}`);
+    }
+}
+
 var main = function () {
+    var gameStateMachine = new StateMachine();
+
     // Get reference to canvas
     var canvas = document.getElementById("canvas-cg-lab");
     canvas.width = window.innerWidth;
@@ -16,5 +30,7 @@ var main = function () {
     try { gl = canvas.getContext("experimental-webgl", { antialias: true }); }
     catch (e) { alert("No webGL compatibility detected!"); return false; }
 
+    gameStateMachine.changeState(STATES.GAMEPLAY_MODE);
     game(gl, canvas);
+
 }
