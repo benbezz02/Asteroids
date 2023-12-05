@@ -1,9 +1,9 @@
-function Player(scene) {
+function Player(gl, scene) {
     this.lives = 3
     this.name = null
     this.points = 0
 
-    this.node = createShip(scene);
+    this.model = this.createShip(gl, scene);
 }
 
 Player.prototype.createShip = function (gl, scene) {
@@ -24,13 +24,14 @@ Player.prototype.createShip = function (gl, scene) {
 
     const shipImage = new Image();
     shipImage.src = '/Asteroids/assets/ship_2.png';
+    NewAsset();
+
     shipImage.onload = () => {
         material.setAlbedo(gl, shipImage.src);
         console.log("Ship Loaded");
-        animate();
+        AssetsLoaded();
     };
 
-    //material.setAlbedo(gl, shipImage);
     material.setDiffuse([1, 1, 1]);
     material.setShininess(8.0);
     material.setSpecular([1, 1, 1]);
@@ -38,9 +39,7 @@ Player.prototype.createShip = function (gl, scene) {
     material.bind(gl, scene.shaderProgram);
 
     model.material = material;
-    var shipNode = scene.addNode(lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
-
-    return shipNode;
+    return model;
 }
 
 Player.prototype.checkForMovement = function (event) {

@@ -17,6 +17,8 @@ function Material() {
 Material.prototype.setAlbedo = function (gl, albedo) {
 	var textureImage = new Image();
 	textureImage.src = albedo;
+	//var textureImage = albedo;
+
 
 	this.albedoTexture = gl.createTexture();
 	gl.activeTexture(gl.TEXTURE0);
