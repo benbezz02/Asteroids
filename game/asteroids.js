@@ -1,12 +1,12 @@
 function Asteroid(gl, scene, points) {
     this.points = points;
-    this.speed = 0
-    this.angularVel = 0
+    this.speed = 0;
+    this.angularVel = 0;
 
-    this.node = createAsteroid(gl, scene)
+    this.model = this.createAsteroid(gl, scene);
 };
 
-Player.prototype.createAsteroid = function (gl, scene) {
+Asteroid.prototype.createAsteroid = function (gl, scene) {
 
     var sphere = makeSphere([0, 0, 0], 2, 50, 50, [0, 0, 0]);
 
@@ -18,15 +18,16 @@ Player.prototype.createAsteroid = function (gl, scene) {
 
     var material = new Material();
 
-    const shipImage = new Image();
-    shipImage.src = '/Asteroids/assets/meteor.png';
-    shipImage.onload = () => {
-        material.setAlbedo(gl, shipImage.src);
-        console.log("Ship Loaded");
-        animate();
+    const asteroidImage = new Image();
+    asteroidImage.src = '/Asteroids/assets/meteor.png';
+    NewAsset();
+
+    asteroidImage.onload = () => {
+        material.setAlbedo(gl, asteroidImage.src);
+        console.log("Rock Loaded");
+        AssetsLoaded();
     };
 
-    //material.setAlbedo(gl, shipImage);
     material.setDiffuse([1, 1, 1]);
     material.setShininess(8.0);
     material.setSpecular([1, 1, 1]);
@@ -34,9 +35,7 @@ Player.prototype.createAsteroid = function (gl, scene) {
     material.bind(gl, scene.shaderProgram);
 
     model.material = material;
-    var asteroidNode = scene.addNode(lightNode, model, "asteroidNode", Node.NODE_TYPE.MODEL);
-
-    return asteroidNode;
+    return model;
 }
 
 function SmallAsteroid(gl, scene) {

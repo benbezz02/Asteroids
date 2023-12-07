@@ -3,6 +3,45 @@
 
 <head>
   <meta charset='utf-8' />
+  <title>Asteroids</title>
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('/Asteroids/assets/Space.png');
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .menu h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    .menu button {
+      font-size: 1.5em;
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #61dafb;
+      color: #282c34;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .menu button:hover {
+      background-color: #4fa3d1;
+    }
+  </style>
 
   <!-- Vertex Shader script in GLSL -->
   <script id="vertex-shader" type="x-shader/x-vertex">
@@ -154,6 +193,7 @@
     </script>
   <div id="imageCollection" style="height:0"></div>
 
+  <script type="text/javascript" src="./main.js"></script>
   <script type="text/javascript" src="./support/make.js"></script>
   <script type="text/javascript" src="./support/matrix.js"></script>
   <script type="text/javascript" src="./support/light.js"></script>
@@ -163,14 +203,18 @@
   <script type="text/javascript" src="./game/player.js"></script>
   <script type="text/javascript" src="./game/asteroids.js"></script>
   <script type="text/javascript" src="./game/saucers.js"></script>
+  <script type="text/javascript" src="./game/background.js"></script>
   <script type="text/javascript" src="./game/script.js"></script>
-  <script type="text/javascript" src="./main.js"></script>
+  <script type="text/javascript" src="./attract/main_menu.js"></script>
 
 </head>
 
-<body style='margin:0px' onload='main()'>
-  <canvas id='canvas-cg-lab' style='position: absolute; background-color: black;'>
-  </canvas>
+<body style='margin:0px' onload='start()'>
+  <div class="menu" id="gameMenu">
+    <h1>Asteroids</h1>
+    <button id="startButton" onclick="start_game()">Start Game</button>
+    <button id="exitButton" onclick="exit()">Exit</button>
+  </div>
 </body>
 
 </html>

@@ -19,9 +19,9 @@ var game = function (gl, canvas) {
 
   // Set up lights
   var light = new Light();
-  light.type = Light.LIGHT_TYPE.SPOT;
+  //light.type = Light.LIGHT_TYPE.SPOT;
   //light.type = Light.LIGHT_TYPE.POINT;
-  //light.type = Light.LIGHT_TYPE.DIRECTIONAL;
+  light.type = Light.LIGHT_TYPE.DIRECTIONAL;
   light.setDiffuse([2, 2, 2]);
   light.setSpecular([1, 1, 1]);
   light.setAmbient([0.2, 0.2, 0.2]);
@@ -31,13 +31,15 @@ var game = function (gl, canvas) {
   light.attenuation = Light.ATTENUATION_TYPE.NONE;
   light.bind(gl, scene.shaderProgram, 0);
 
+  //Game Set UP
+  //var background = setbackground(gl, scene, '/Asteroids/assets/background_stars.png')
   var player = new Player(gl, scene)
+  var asteroid = new Asteroid(gl, scene, 100)
 
   var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
+  //var backgroundNode = scene.addNode(lightNode, background.model, "backgroundNode", Node.NODE_TYPE.MODEL);
   var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
-
-  //var asteroid = new SmallAsteroid(gl, scene)
-
+  var asteroidNode = scene.addNode(lightNode, asteroid.model, "shipNode", Node.NODE_TYPE.MODEL);
   // Set up animation
 
 
@@ -59,6 +61,11 @@ var game = function (gl, canvas) {
   scene.setViewFrustum(1, 100, 0.5236);
   var animate = function () {
     if (assetsCounter == assetsLoaded) {
+      //console.log(assetsCounter)
+      //console.log(assetsLoaded)
+
+      Mat4x4.makeTranslation(asteroidNode.transform, [5, 0, 0]);
+
       //Mat4x4.makeRotationY(viewTransform, theta);  // rotate camera about y
       //Mat4x4.multiplyPoint(observer, viewTransform, [0,0,15]);  // apply camera rotation   
       scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);

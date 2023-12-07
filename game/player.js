@@ -1,7 +1,7 @@
 function Player(gl, scene) {
-    this.lives = 3
-    this.name = null
-    this.points = 0
+    this.lives = 3;
+    this.name = null;
+    this.points = 0;
 
     this.model = this.createShip(gl, scene);
 }
@@ -9,7 +9,7 @@ function Player(gl, scene) {
 Player.prototype.createShip = function (gl, scene) {
 
     var quad = makeQuad(
-        [[-5, -5, 0], [5, -5, 0], [5, 5, 0], [-5, 5, 0]],
+        [[-1, -1, 0], [1, -1, 0], [1, 1, 0], [-1, 1, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
