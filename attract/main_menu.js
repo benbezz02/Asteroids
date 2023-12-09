@@ -12,15 +12,14 @@ var start_game = function () {
 
     var canvas = document.createElement("canvas");
     canvas.id = "canvas-cg-lab";
-    canvas.style.position = "centre";
     canvas.style.backgroundColor = "black";
-
-    document.body.appendChild(canvas);
-
-    var canvas = document.getElementById("canvas-cg-lab");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     canvas.aspect = canvas.width / canvas.height;
+    canvas.style.position = "absolute";
+
+    document.body.appendChild(canvas);
+
 
     // Assign context to gl
     var gl = null;

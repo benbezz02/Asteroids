@@ -10,8 +10,12 @@ function StateMachine() {
 }
 
 StateMachine.prototype.changeState = function (state) {
-
-    if (this.currentState == STATES.ATTRACT_MODE) {
+    if (this.currentState == null) {
+        if (state != STATES.ATTRACT_MODE) {
+            console.error("Invalid state entered: " + state);
+        }
+        this.currentState = state
+    } else if (this.currentState == STATES.ATTRACT_MODE) {
         if (state == STATES.GAME_OVER_MODE) {
             console.error("Invalid state entered: " + state);
         }
