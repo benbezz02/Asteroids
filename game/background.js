@@ -24,7 +24,7 @@ var setbackground = function (gl, scene, imagePath) {
     };
 
     material.setDiffuse([1, 1, 1]);
-    material.setShininess(8.0);
+    material.setShininess(5.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
     material.bind(gl, scene.shaderProgram);

@@ -27,7 +27,7 @@ var start_game = function () {
     catch (e) { alert("No webGL compatibility detected!"); return false; }
 
     gameStateMachine.changeState(STATES.GAMEPLAY_MODE);
-    game(gl, canvas);
+    animateGame(gl, canvas);
 }
 
 var exit = function () {

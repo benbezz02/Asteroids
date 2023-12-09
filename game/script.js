@@ -11,7 +11,7 @@ var AssetsLoaded = function () {
   return assetsLoaded;
 }
 
-var game = function (gl, canvas) {
+var animateGame = function (gl, canvas) {
 
   // Set up scene
   scene = new Scene();
@@ -37,11 +37,20 @@ var game = function (gl, canvas) {
   var asteroid = new Asteroid(gl, scene, 100)
 
   var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
-  var backgroundNode = scene.addNode(lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
-  var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
-  var asteroidNode = scene.addNode(lightNode, asteroid.model, "shipNode", Node.NODE_TYPE.MODEL);
-  // Set up animation
 
+  var nodesArray = new Array()
+
+  var backgroundNode = scene.addNode(lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
+  nodesArray.push(backgroundNode)
+
+  var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
+  nodesArray.push(shipNode)
+
+  var asteroidNode = scene.addNode(lightNode, asteroid.model, "shipNode", Node.NODE_TYPE.MODEL);
+  nodesArray.push(asteroidNode)
+
+
+  // Set up animation
 
   var Vec3 = matrixHelper.vector3;
   var Mat4x4 = matrixHelper.matrix4;
@@ -61,19 +70,35 @@ var game = function (gl, canvas) {
   scene.setViewFrustum(1, 100, 0.5236);
   var animate = function () {
     if (assetsCounter == assetsLoaded) {
-      //console.log(assetsCounter)
-      //console.log(assetsLoaded)
       Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
+
       Mat4x4.makeTranslation(asteroidNode.transform, [5, 0, 0]);
 
-      //Mat4x4.makeRotationY(viewTransform, theta);  // rotate camera about y
-      //Mat4x4.multiplyPoint(observer, viewTransform, [0,0,15]);  // apply camera rotation   
+      window.addEventListener('keydown', function (event) {
+        player.checkForMovement(event, shipNode);
+      });
+
       scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
 
       scene.beginFrame();
       scene.animate();
       scene.draw();
       scene.endFrame();
+
+      // Checking edges
+      for (var node of nodesArray) {
+        if (node.transform[13] >= 7.1) {
+          node.transform[13] = -7
+        } else if (node.transform[13] <= -7.1) {
+          node.transform[13] = 7
+        }
+
+        if (node.transform[13] >= 17.1) {
+          node.transform[13] = -17
+        } else if (node.transform[13] <= -17.1) {
+          node.transform[13] = 17
+        }
+      }
     }
     window.requestAnimationFrame(animate);
   };

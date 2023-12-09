@@ -9,7 +9,7 @@ function Player(gl, scene) {
 Player.prototype.createShip = function (gl, scene) {
 
     var quad = makeQuad(
-        [[-1, -1, 0], [1, -1, 0], [1, 1, 0], [-1, 1, 0]],
+        [[-0.5, -0.5, 0], [0.5, -0.5, 0], [0.5, 0.5, 0], [-0.5, 0.5, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
@@ -42,42 +42,60 @@ Player.prototype.createShip = function (gl, scene) {
     return model;
 }
 
-Player.prototype.checkForMovement = function (event) {
+Player.prototype.checkForMovement = function (event, ship_node) {
     switch (event.keyCode) {
         // Space Bar
-        case (32): {
-
+        case 32: {
+            break;
         }
         // Up Arrow or W
-        case (38 || 87): {
-            this.moveForward();
+        case 38:
+        case 87: {
+            this.moveForward(ship_node);
+            break;
         }
         // Left Arrow or A
-        case (37 || 65): {
-            this.rotateLeft();
+        case 37:
+        case 65: {
+            this.rotateLeft(ship_node);
+            break;
         }
         // Right Arrow or D
-        case (39 || 68): {
-            this.rotateRight();
+        case 39:
+        case 68: {
+            this.rotateRight(ship_node);
+            break;
         }
         default: {
-
+            break;
         }
     }
 }
 
-Player.prototype.moveForward = function () {
-    this.node.transform[13] += 0.5
+Player.prototype.moveForward = function (ship_node) {
+    ship_node.transform[13] += 0.0003
 }
 
-Player.prototype.rotateLeft = function () {
-    var yTransform = Mat4x4.create();
-    Mat4x4.makeRotationY(yTransform, 0.5);
+Player.prototype.rotateLeft = function (ship_node) {
+    var Mat4x4 = matrixHelper.matrix4;
+
+    var zTransform = Mat4x4.create();
+    Mat4x4.makeRotationZ(zTransform, 0.0005);
+
+    var copy = Mat4x4.clone(ship_node.transform);
+
+    Mat4x4.multiply(ship_node.transform, copy, zTransform);
 }
 
-Player.prototype.rotateRight = function () {
-    var yTransform = Mat4x4.create();
-    Mat4x4.makeRotationY(yTransform, -0.5);
+Player.prototype.rotateRight = function (ship_node) {
+    var Mat4x4 = matrixHelper.matrix4;
+
+    var zTransform = Mat4x4.create();
+    Mat4x4.makeRotationZ(zTransform, -0.0005);
+
+    var copy = Mat4x4.clone(ship_node.transform);
+
+    Mat4x4.multiply(ship_node.transform, copy, zTransform);
 }
 
 Player.prototype.checkAdditionalLife = function () {
