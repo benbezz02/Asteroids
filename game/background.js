@@ -1,6 +1,6 @@
 var setbackground = function (gl, scene, imagePath) {
     var quad = makeQuad(
-        [[-10, -10, 0], [10, -10, 0], [10, 10, 0], [-10, 10, 0]],
+        [[-20, -10, 0], [20, -10, 0], [20, 10, 0], [-20, 10, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
@@ -19,7 +19,7 @@ var setbackground = function (gl, scene, imagePath) {
 
     backgroundImage.onload = () => {
         material.setAlbedo(gl, backgroundImage.src);
-        console.log("Ship Loaded");
+        console.log("Background Loaded");
         AssetsLoaded();
     };
 

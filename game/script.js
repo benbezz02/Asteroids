@@ -32,12 +32,12 @@ var game = function (gl, canvas) {
   light.bind(gl, scene.shaderProgram, 0);
 
   //Game Set UP
-  //var background = setbackground(gl, scene, '/Asteroids/assets/background_stars.png')
+  var background = setbackground(gl, scene, '/Asteroids/assets/Space.png')
   var player = new Player(gl, scene)
   var asteroid = new Asteroid(gl, scene, 100)
 
   var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
-  //var backgroundNode = scene.addNode(lightNode, background.model, "backgroundNode", Node.NODE_TYPE.MODEL);
+  var backgroundNode = scene.addNode(lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
   var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
   var asteroidNode = scene.addNode(lightNode, asteroid.model, "shipNode", Node.NODE_TYPE.MODEL);
   // Set up animation
@@ -63,7 +63,7 @@ var game = function (gl, canvas) {
     if (assetsCounter == assetsLoaded) {
       //console.log(assetsCounter)
       //console.log(assetsLoaded)
-
+      Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
       Mat4x4.makeTranslation(asteroidNode.transform, [5, 0, 0]);
 
       //Mat4x4.makeRotationY(viewTransform, theta);  // rotate camera about y

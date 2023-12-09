@@ -79,3 +79,9 @@ Player.prototype.rotateRight = function () {
     var yTransform = Mat4x4.create();
     Mat4x4.makeRotationY(yTransform, -0.5);
 }
+
+Player.prototype.checkAdditionalLife = function () {
+    if ((this.score % 10000) == 0) {
+        this.lives += 1;
+    }
+}
