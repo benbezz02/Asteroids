@@ -73,6 +73,11 @@ Player.prototype.checkForMovement = function (event, ship_node) {
 }
 
 Player.prototype.moveForward = function (ship_node) {
+    var Mat4x4 = matrixHelper.matrix4;
+
+    var transform = Mat4x4.create()
+
+
     ship_node.transform[13] += 0.0003
 }
 

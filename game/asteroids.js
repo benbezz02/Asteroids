@@ -8,7 +8,7 @@ function Asteroid(gl, scene, points) {
 
 Asteroid.prototype.createAsteroid = function (gl, scene) {
 
-    var sphere = makeSphere([0, 0, 0], 2, 50, 50, [0, 0, 0]);
+    var sphere = makeSphere([0, 0, 0], 0.5, 50, 50, [0, 0, 0]);
 
     var model = new Model();
     model.name = "sphere";

@@ -13,6 +13,9 @@ var AssetsLoaded = function () {
 
 var animateGame = function (gl, canvas) {
 
+  var Vec3 = matrixHelper.vector3;
+  var Mat4x4 = matrixHelper.matrix4;
+
   // Set up scene
   scene = new Scene();
   scene.initialise(gl, canvas);
@@ -35,6 +38,7 @@ var animateGame = function (gl, canvas) {
   var background = setbackground(gl, scene, '/Asteroids/assets/Space.png')
   var player = new Player(gl, scene)
   var asteroid = new Asteroid(gl, scene, 100)
+  var saucer = new Saucer(gl, scene, 100)
 
   var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
 
@@ -42,18 +46,20 @@ var animateGame = function (gl, canvas) {
 
   var backgroundNode = scene.addNode(lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
   nodesArray.push(backgroundNode)
+  Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
 
   var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
   nodesArray.push(shipNode)
 
-  var asteroidNode = scene.addNode(lightNode, asteroid.model, "shipNode", Node.NODE_TYPE.MODEL);
+  var asteroidNode = scene.addNode(lightNode, asteroid.model, "asteroidNode", Node.NODE_TYPE.MODEL);
   nodesArray.push(asteroidNode)
+  Mat4x4.makeTranslation(asteroidNode.transform, [5, 0, 0]);
 
+  var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
+  nodesArray.push(saucerNode)
+  Mat4x4.makeTranslation(saucerNode.transform, [-5, 0, 0]);
 
   // Set up animation
-
-  var Vec3 = matrixHelper.vector3;
-  var Mat4x4 = matrixHelper.matrix4;
 
   var theta = 0;
   var lightTransform = Mat4x4.create();
@@ -70,9 +76,6 @@ var animateGame = function (gl, canvas) {
   scene.setViewFrustum(1, 100, 0.5236);
   var animate = function () {
     if (assetsCounter == assetsLoaded) {
-      Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
-
-      Mat4x4.makeTranslation(asteroidNode.transform, [5, 0, 0]);
 
       window.addEventListener('keydown', function (event) {
         player.checkForMovement(event, shipNode);
