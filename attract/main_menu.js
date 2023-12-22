@@ -13,10 +13,10 @@ var start_game = function () {
     var canvas = document.createElement("canvas");
     canvas.id = "canvas-cg-lab";
     canvas.style.backgroundColor = "black";
+    canvas.style.position = "absolute";
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     canvas.aspect = canvas.width / canvas.height;
-    canvas.style.position = "absolute";
 
     document.body.appendChild(canvas);
 

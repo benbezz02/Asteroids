@@ -23,7 +23,7 @@ Asteroid.prototype.createAsteroid = function (gl, scene) {
     NewAsset();
 
     asteroidImage.onload = () => {
-        material.setAlbedo(gl, asteroidImage.src);
+        material.setAlbedo(gl, asteroidImage);
         console.log("Rock Loaded");
         AssetsLoaded();
     };

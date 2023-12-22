@@ -18,7 +18,7 @@ var setbackground = function (gl, scene, imagePath) {
     NewAsset();
 
     backgroundImage.onload = () => {
-        material.setAlbedo(gl, backgroundImage.src);
+        material.setAlbedo(gl, backgroundImage);
         console.log("Background Loaded");
         AssetsLoaded();
     };

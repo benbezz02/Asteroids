@@ -27,7 +27,7 @@ Saucer.prototype.createSaucer = function (gl, scene) {
     NewAsset();
 
     saucerImage.onload = () => {
-        material.setAlbedo(gl, saucerImage.src);
+        material.setAlbedo(gl, saucerImage);
         console.log("Saucer Loaded");
         AssetsLoaded();
     };

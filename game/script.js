@@ -20,6 +20,8 @@ var animateGame = function (gl, canvas) {
   scene = new Scene();
   scene.initialise(gl, canvas);
 
+  var game = new Game(gl, scene);
+
   // Set up lights
   var light = new Light();
   //light.type = Light.LIGHT_TYPE.SPOT;
@@ -37,27 +39,23 @@ var animateGame = function (gl, canvas) {
   //Game Set UP
   var background = setbackground(gl, scene, '/Asteroids/assets/Space.png')
   var player = new Player(gl, scene)
-  var asteroid = new Asteroid(gl, scene, 100)
-  var saucer = new Saucer(gl, scene, 100)
+  //var asteroid = new Asteroid(gl, scene, 100)
+  //var saucer = new Saucer(gl, scene, 100)
 
   var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
 
-  var nodesArray = new Array()
-
   var backgroundNode = scene.addNode(lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
-  nodesArray.push(backgroundNode)
+  game.nodesArray.push(backgroundNode)
   Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
 
   var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
-  nodesArray.push(shipNode)
+  game.nodesArray.push(shipNode)
 
-  var asteroidNode = scene.addNode(lightNode, asteroid.model, "asteroidNode", Node.NODE_TYPE.MODEL);
-  nodesArray.push(asteroidNode)
-  Mat4x4.makeTranslation(asteroidNode.transform, [5, 0, 0]);
+  game.AsteroidSpawner(lightNode);
 
-  var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
-  nodesArray.push(saucerNode)
-  Mat4x4.makeTranslation(saucerNode.transform, [-5, 0, 0]);
+  //var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
+  //nodesArray.push(saucerNode)
+  //Mat4x4.makeTranslation(saucerNode.transform, [-5, 0, 0]);
 
   // Set up animation
 
@@ -89,7 +87,7 @@ var animateGame = function (gl, canvas) {
       scene.endFrame();
 
       // Checking edges
-      for (var node of nodesArray) {
+      for (var node of game.nodesArray) {
         if (node.transform[13] >= 7.1) {
           node.transform[13] = -7
         } else if (node.transform[13] <= -7.1) {

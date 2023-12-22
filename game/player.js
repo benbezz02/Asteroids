@@ -27,7 +27,7 @@ Player.prototype.createShip = function (gl, scene) {
     NewAsset();
 
     shipImage.onload = () => {
-        material.setAlbedo(gl, shipImage.src);
+        material.setAlbedo(gl, shipImage);
         console.log("Ship Loaded");
         AssetsLoaded();
     };
