@@ -41,13 +41,28 @@ Asteroid.prototype.createAsteroid = function (gl, scene) {
 function SmallAsteroid(gl, scene) {
     Asteroid.call(this, gl, scene, 100);
 
-    SmallAsteroid.speed = 150;
+    this.speed = 0.06;
+    this.angularVel = 0.2;
 };
 
 function MediumAsteroid(gl, scene) {
     Asteroid.call(this, gl, scene, 50);
+
+    this.speed = 0.04;
+    this.angularVel = 0.1;
 };
 
 function LargeAsteroid(gl, scene) {
     Asteroid.call(this, gl, scene, 20);
+
+    this.speed = 0.02;
+    this.angularVel = 0.01;
 };
+
+SmallAsteroid.prototype = Object.create(Asteroid.prototype);
+MediumAsteroid.prototype = Object.create(Asteroid.prototype);
+LargeAsteroid.prototype = Object.create(Asteroid.prototype);
+
+SmallAsteroid.prototype.constructor = SmallAsteroid;
+MediumAsteroid.prototype.constructor = MediumAsteroid;
+LargeAsteroid.prototype.constructor = LargeAsteroid;
