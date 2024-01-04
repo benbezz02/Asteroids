@@ -2,8 +2,7 @@ function Player(game) {
     this.lives = 3;
     this.name = null;
     this.points = 0;
-
-    this.model = this.createShip(game);
+    this.createShip(game);
 }
 
 Player.prototype.createShip = function (game) {
@@ -39,7 +38,8 @@ Player.prototype.createShip = function (game) {
     material.bind(game.gl, game.scene.shaderProgram);
 
     model.material = material;
-    return model;
+
+    game.shipNode = scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
 }
 
 Player.prototype.checkForMovement = function (event, game) {
@@ -105,7 +105,7 @@ Player.prototype.rotateRight = function (ship_node) {
 }
 
 Player.prototype.fireProjectile = function (game) {
-    var laser = new Projectile(game.gl, game.scene)
+    var laser = new Projectile(game)
 
     laser.animationCallback = function () {
         this.transform[13] += laser.speed;

@@ -1,10 +1,10 @@
-function Projectile(gl, scene) {
+function Projectile(game) {
     this.speed = 2
 
-    this.model = this.createProjectile(gl, scene);
+    this.model = this.createProjectile(game);
 }
 
-Projectile.prototype.createProjectile = function (gl, scene) {
+Projectile.prototype.createProjectile = function (game) {
     var quad = makeQuad(
         [[-0.25, -0.25, 0], [0.25, -0.25, 0], [0.25, 0.25, 0], [-0.25, 0.25, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
@@ -15,7 +15,7 @@ Projectile.prototype.createProjectile = function (gl, scene) {
     model.name = "quad";
     model.index = quad.index;
     model.vertex = quad.vertex;
-    model.compile(scene);
+    model.compile(game.scene);
 
     var material = new Material();
 
@@ -24,7 +24,7 @@ Projectile.prototype.createProjectile = function (gl, scene) {
     NewAsset();
 
     projectileImage.onload = () => {
-        material.setAlbedo(gl, projectileImage);
+        material.setAlbedo(game.gl, projectileImage);
         console.log("Laser Loaded");
         AssetsLoaded();
     };
@@ -33,7 +33,7 @@ Projectile.prototype.createProjectile = function (gl, scene) {
     material.setShininess(8.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(gl, scene.shaderProgram);
+    material.bind(game.gl, scene.shaderProgram);
 
     model.material = material;
     return model;

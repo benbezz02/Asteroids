@@ -23,16 +23,9 @@ var animateGame = function (gl, canvas) {
   var game = new Game(gl, scene);
 
   //Game Set UP
-  var background = setbackground(game, '/Asteroids/assets/Space.png')
+  setbackground(game, '/Asteroids/assets/Space.png')
   var player = new Player(game)
-  //var asteroid = new Asteroid(gl, scene, 100)
   //var saucer = new Saucer(gl, scene, 100)
-
-
-  var backgroundNode = scene.addNode(game.lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
-  Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
-
-  game.shipNode = scene.addNode(game.lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
 
   game.AsteroidSpawner();
 

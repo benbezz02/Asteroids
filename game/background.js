@@ -30,5 +30,7 @@ var setbackground = function (game, imagePath) {
     material.bind(game.gl, scene.shaderProgram);
 
     model.material = material;
-    return model
+
+    var backgroundNode = scene.addNode(game.lightNode, model, "backgroundNode", Node.NODE_TYPE.MODEL);
+    matrixHelper.matrix4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
 }
