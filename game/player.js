@@ -1,12 +1,12 @@
-function Player(gl, scene) {
+function Player(game) {
     this.lives = 3;
     this.name = null;
     this.points = 0;
 
-    this.model = this.createShip(gl, scene);
+    this.model = this.createShip(game);
 }
 
-Player.prototype.createShip = function (gl, scene) {
+Player.prototype.createShip = function (game) {
 
     var quad = makeQuad(
         [[-0.5, -0.5, 0], [0.5, -0.5, 0], [0.5, 0.5, 0], [-0.5, 0.5, 0]],
@@ -18,7 +18,7 @@ Player.prototype.createShip = function (gl, scene) {
     model.name = "quad";
     model.index = quad.index;
     model.vertex = quad.vertex;
-    model.compile(scene);
+    model.compile(game.scene);
 
     var material = new Material();
 
@@ -27,7 +27,7 @@ Player.prototype.createShip = function (gl, scene) {
     NewAsset();
 
     shipImage.onload = () => {
-        material.setAlbedo(gl, shipImage);
+        material.setAlbedo(game.gl, shipImage);
         console.log("Ship Loaded");
         AssetsLoaded();
     };
@@ -36,34 +36,35 @@ Player.prototype.createShip = function (gl, scene) {
     material.setShininess(8.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(gl, scene.shaderProgram);
+    material.bind(game.gl, game.scene.shaderProgram);
 
     model.material = material;
     return model;
 }
 
-Player.prototype.checkForMovement = function (event, ship_node) {
+Player.prototype.checkForMovement = function (event, game) {
     switch (event.keyCode) {
         // Space Bar
         case 32: {
+            this.fireProjectile(game);
             break;
         }
         // Up Arrow or W
         case 38:
         case 87: {
-            this.moveForward(ship_node);
+            this.moveForward(game.shipNode);
             break;
         }
         // Left Arrow or A
         case 37:
         case 65: {
-            this.rotateLeft(ship_node);
+            this.rotateLeft(game.shipNode);
             break;
         }
         // Right Arrow or D
         case 39:
         case 68: {
-            this.rotateRight(ship_node);
+            this.rotateRight(game.shipNode);
             break;
         }
         default: {
@@ -101,6 +102,14 @@ Player.prototype.rotateRight = function (ship_node) {
     var copy = Mat4x4.clone(ship_node.transform);
 
     Mat4x4.multiply(ship_node.transform, copy, zTransform);
+}
+
+Player.prototype.fireProjectile = function (game) {
+    var laser = new Projectile(game.gl, game.scene)
+
+    laser.animationCallback = function () {
+        this.transform[13] += laser.speed;
+    };
 }
 
 Player.prototype.checkAdditionalLife = function () {

@@ -22,36 +22,19 @@ var animateGame = function (gl, canvas) {
 
   var game = new Game(gl, scene);
 
-  // Set up lights
-  var light = new Light();
-  //light.type = Light.LIGHT_TYPE.SPOT;
-  //light.type = Light.LIGHT_TYPE.POINT;
-  light.type = Light.LIGHT_TYPE.DIRECTIONAL;
-  light.setDiffuse([2, 2, 2]);
-  light.setSpecular([1, 1, 1]);
-  light.setAmbient([0.2, 0.2, 0.2]);
-  light.setPosition([0, 0, 2.5]);
-  light.setDirection([0, 0, -1]);
-  light.setCone(0.7, 0.6);
-  light.attenuation = Light.ATTENUATION_TYPE.NONE;
-  light.bind(gl, scene.shaderProgram, 0);
-
   //Game Set UP
-  var background = setbackground(gl, scene, '/Asteroids/assets/Space.png')
-  var player = new Player(gl, scene)
+  var background = setbackground(game, '/Asteroids/assets/Space.png')
+  var player = new Player(game)
   //var asteroid = new Asteroid(gl, scene, 100)
   //var saucer = new Saucer(gl, scene, 100)
 
-  var lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
 
-  var backgroundNode = scene.addNode(lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
-  game.nodesArray.push(backgroundNode)
+  var backgroundNode = scene.addNode(game.lightNode, background, "backgroundNode", Node.NODE_TYPE.MODEL);
   Mat4x4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
 
-  var shipNode = scene.addNode(lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
-  game.nodesArray.push(shipNode)
+  game.shipNode = scene.addNode(game.lightNode, player.model, "shipNode", Node.NODE_TYPE.MODEL);
 
-  game.AsteroidSpawner(lightNode);
+  game.AsteroidSpawner();
 
   //var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
   //nodesArray.push(saucerNode)
@@ -76,7 +59,7 @@ var animateGame = function (gl, canvas) {
     if (assetsCounter == assetsLoaded) {
 
       window.addEventListener('keydown', function (event) {
-        player.checkForMovement(event, shipNode);
+        player.checkForMovement(event, game);
       });
 
       scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
@@ -87,7 +70,7 @@ var animateGame = function (gl, canvas) {
       scene.endFrame();
 
       // Checking edges
-      for (var node of game.nodesArray) {
+      for (var node of game.asteroidsArray) {
         if (node.transform[13] >= 7.1) {
           node.transform[13] = -7
         } else if (node.transform[13] <= -7.1) {
@@ -99,6 +82,18 @@ var animateGame = function (gl, canvas) {
         } else if (node.transform[13] <= -17.1) {
           node.transform[13] = 17
         }
+      }
+
+      if (game.shipNode.transform[13] >= 7.1) {
+        game.shipNode.transform[13] = -7
+      } else if (game.shipNode.transform[13] <= -7.1) {
+        game.shipNode.transform[13] = 7
+      }
+
+      if (game.shipNode.transform[13] >= 17.1) {
+        game.shipNode.transform[13] = -17
+      } else if (game.shipNode.transform[13] <= -17.1) {
+        game.shipNode.transform[13] = 17
       }
     }
     window.requestAnimationFrame(animate);

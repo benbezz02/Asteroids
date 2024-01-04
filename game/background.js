@@ -1,4 +1,4 @@
-var setbackground = function (gl, scene, imagePath) {
+var setbackground = function (game, imagePath) {
     var quad = makeQuad(
         [[-20, -10, 0], [20, -10, 0], [20, 10, 0], [-20, 10, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
@@ -9,7 +9,7 @@ var setbackground = function (gl, scene, imagePath) {
     model.name = "quad";
     model.index = quad.index;
     model.vertex = quad.vertex;
-    model.compile(scene);
+    model.compile(game.scene);
 
     var material = new Material();
 
@@ -18,7 +18,7 @@ var setbackground = function (gl, scene, imagePath) {
     NewAsset();
 
     backgroundImage.onload = () => {
-        material.setAlbedo(gl, backgroundImage);
+        material.setAlbedo(game.gl, backgroundImage);
         console.log("Background Loaded");
         AssetsLoaded();
     };
@@ -27,7 +27,7 @@ var setbackground = function (gl, scene, imagePath) {
     material.setShininess(5.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(gl, scene.shaderProgram);
+    material.bind(game.gl, scene.shaderProgram);
 
     model.material = material;
     return model
