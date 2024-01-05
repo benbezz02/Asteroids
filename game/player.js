@@ -1,8 +1,9 @@
 function Player(game) {
-    this.lives = 3;
-    this.name = null;
-    this.points = 0;
-    this.createShip(game);
+    this.lives = 3
+    this.name = null
+    this.points = 0
+    this.lasersArray = new Array()
+    this.createShip(game)
 }
 
 Player.prototype.createShip = function (game) {
@@ -105,11 +106,14 @@ Player.prototype.rotateRight = function (ship_node) {
 }
 
 Player.prototype.fireProjectile = function (game) {
+    /*
     var laser = new Projectile(game)
+    this.lasersArray.push(scene.addNode(game.lightNode, laser, "laserNode", Node.NODE_TYPE.MODEL))
 
-    laser.animationCallback = function () {
+    this.lasersArray[0].animationCallback = function () {
         this.transform[13] += laser.speed;
     };
+*/
 }
 
 Player.prototype.checkAdditionalLife = function () {

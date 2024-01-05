@@ -25,9 +25,7 @@ var animateGame = function (gl, canvas) {
   //Game Set UP
   setbackground(game, '/Asteroids/assets/Space.png')
   var player = new Player(game)
-  //var saucer = new Saucer(gl, scene, 100)
-
-  game.AsteroidSpawner();
+  //  var ast = new LargeAsteroid(game)
 
   //var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
   //nodesArray.push(saucerNode)
@@ -45,10 +43,13 @@ var animateGame = function (gl, canvas) {
   Mat4x4.makeIdentity(modelTransform);
   Mat4x4.makeIdentity(lightTransform);
 
+
   // Set up render loop
   //--------------------------------------------------------------------------------------------------------//
   scene.setViewFrustum(1, 100, 0.5236);
   var animate = function () {
+    game.AsteroidSpawnerChecker();
+
     if (assetsCounter == assetsLoaded) {
 
       window.addEventListener('keydown', function (event) {
@@ -63,17 +64,17 @@ var animateGame = function (gl, canvas) {
       scene.endFrame();
 
       // Checking edges
-      for (var node of game.asteroidsArray) {
-        if (node.transform[13] >= 7.1) {
-          node.transform[13] = -7
-        } else if (node.transform[13] <= -7.1) {
-          node.transform[13] = 7
+      for (var asteroid of game.asteroidsArray) {
+        if (asteroid.asteroidNode.transform[13] >= 7.1) {
+          asteroid.asteroidNode.transform[13] = -7
+        } else if (asteroid.asteroidNode.transform[13] <= -7.1) {
+          asteroid.asteroidNode.transform[13] = 7
         }
 
-        if (node.transform[13] >= 17.1) {
-          node.transform[13] = -17
-        } else if (node.transform[13] <= -17.1) {
-          node.transform[13] = 17
+        if (asteroid.asteroidNode.transform[13] >= 17.1) {
+          asteroid.asteroidNode.transform[13] = -17
+        } else if (asteroid.asteroidNode.transform[13] <= -17.1) {
+          asteroid.asteroidNode.transform[13] = 17
         }
       }
 
