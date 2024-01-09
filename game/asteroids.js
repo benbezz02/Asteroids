@@ -4,6 +4,7 @@ function Asteroid(game, points, speed, angularVel) {
     this.angularVel = angularVel;
 
     this.asteroidNode = this.createAsteroid(game);
+    this.asteroidNode.speed = speed;
 };
 
 Asteroid.prototype.createAsteroid = function (game) {
@@ -40,15 +41,15 @@ Asteroid.prototype.createAsteroid = function (game) {
 }
 
 function SmallAsteroid(game) {
-    Asteroid.call(this, game, 100, 0.06, 0.2);
+    Asteroid.call(this, game, 100, 0.1, 0.2);
 };
 
 function MediumAsteroid(game) {
-    Asteroid.call(this, game, 50, 0.04, 0.1);
+    Asteroid.call(this, game, 50, 0.5, 0.1);
 };
 
 function LargeAsteroid(game) {
-    Asteroid.call(this, game, 20, 0.02, 0.01);
+    Asteroid.call(this, game, 20, 0.01, 0.01);
 };
 
 AsteroidSpawner = function (game) {
@@ -69,12 +70,14 @@ AsteroidSpawner = function (game) {
 
         game.asteroidsArray.push(asteroid)
         Mat4x4.makeTranslation(game.asteroidsArray[i].asteroidNode.transform, [i, 0, 0]);
-        
-        var ang = 0
+    }
 
-        game.asteroidsArray[i].asteroidNode.animationCallback = function (deltaTime) {
+    var ang = 0
+
+    for (var j = 0; j < game.asteroidsArray.length; j++) {
+        game.asteroidsArray[j].asteroidNode.animationCallback = function (deltaTime) {
             ang += deltaTime / 1000;
-            this.transform[13] = Math.cos(ang) * 4;
+            this.transform[13] += this.speed;
         }
     }
 }

@@ -1,12 +1,12 @@
-function Saucer(gl, scene, points) {
+function Saucer(game, points) {
     this.points = points
     this.speed = 0;
     this.angularVel = 0;
 
-    this.model = this.createSaucer(gl, scene);
+    this.model = this.createSaucer(game);
 };
 
-Saucer.prototype.createSaucer = function (gl, scene) {
+Saucer.prototype.createSaucer = function (game) {
 
     var quad = makeQuad(
         [[-0.5, -0.5, 0], [0.5, -0.5, 0], [0.5, 0.5, 0], [-0.5, 0.5, 0]],
@@ -18,16 +18,16 @@ Saucer.prototype.createSaucer = function (gl, scene) {
     model.name = "quad";
     model.index = quad.index;
     model.vertex = quad.vertex;
-    model.compile(scene);
+    model.compile(game.scene);
 
     var material = new Material();
 
     const saucerImage = new Image();
-    saucerImage.src = '/Asteroids/assets/saucer1.png';
+    saucerImage.src = '/Asteroids/assets/Aliens1.png';
     NewAsset();
 
     saucerImage.onload = () => {
-        material.setAlbedo(gl, saucerImage);
+        material.setAlbedo(game.gl, saucerImage);
         console.log("Saucer Loaded");
         AssetsLoaded();
     };
@@ -36,10 +36,11 @@ Saucer.prototype.createSaucer = function (gl, scene) {
     material.setShininess(8.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(gl, scene.shaderProgram);
+    material.bind(game.gl, scene.shaderProgram);
 
     model.material = material;
-    return model;
+    var node = scene.addNode(game.lightNode, model, "saucerNode", Node.NODE_TYPE.MODEL)
+    return node;
 }
 
 Saucer.prototype.Spawn = function () {

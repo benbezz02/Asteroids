@@ -2,6 +2,7 @@ function Game(gl, scene) {
     this.wave = 0
     this.shipNode = null
     this.asteroidsArray = new Array()
+    this.saucersArray = new Array()
 
     this.gl = gl
     this.scene = scene

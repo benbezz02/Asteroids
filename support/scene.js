@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------------------------------//
 //  Scene Element
 //--------------------------------------------------------------------------------------------------------//
-function Node() 
-{
+function Node() {
 	this.type = 0;
 	this.name = "untitled";
 	this.parent = null;
 	this.children = [];
 	this.nodeObject = null;
+	this.speed = null;
 
 	// Create transform for node (= I)
 	this.transform = matrixHelper.matrix4.create();
@@ -17,23 +17,21 @@ function Node()
 }
 
 Node.NODE_TYPE = {
-	GROUP_ROOT : 0,
-	GROUP : 1,
-	LIGHT : 2,
-	MODEL : 3
+	GROUP_ROOT: 0,
+	GROUP: 1,
+	LIGHT: 2,
+	MODEL: 3
 }
 
-Node.prototype.draw = function(scene, parentTransform) 
-{
+Node.prototype.draw = function (scene, parentTransform) {
 	var compositeTransform = matrixHelper.matrix4.create();
 	matrixHelper.matrix4.multiply(compositeTransform, this.transform, parentTransform);
 
-	if (this.type == Node.NODE_TYPE.MODEL)
-	{
+	if (this.type == Node.NODE_TYPE.MODEL) {
 		if (this.nodeObject) {
 			this.nodeObject.draw(scene, compositeTransform);
 		}
-	} 
+	}
 
 	// else if (this.type == Node.NODE_TYPE.LIGHT)
 	// {
@@ -42,13 +40,12 @@ Node.prototype.draw = function(scene, parentTransform)
 	// 		this.nodeObject.useTransformed(scene.gl, compositeTransform);
 	// 	}
 	// }
-	
+
 	var _type = this.type;
 	var _nodeObject = this.nodeObject;
 
-	this.children.forEach(function(childNode) {
-		if (_type == Node.NODE_TYPE.LIGHT)
-		{
+	this.children.forEach(function (childNode) {
+		if (_type == Node.NODE_TYPE.LIGHT) {
 			// Transform light before setting it
 			if (_nodeObject) {
 				_nodeObject.useTransformed(scene.gl, compositeTransform);
@@ -59,12 +56,11 @@ Node.prototype.draw = function(scene, parentTransform)
 	});
 }
 
-Node.prototype.animate = function(deltaTime)
-{
+Node.prototype.animate = function (deltaTime) {
 	if (this.animationCallback)
 		this.animationCallback(deltaTime);
 
-	this.children.forEach(function(childNode) {
+	this.children.forEach(function (childNode) {
 		childNode.animate(deltaTime);
 	});
 }
@@ -72,8 +68,7 @@ Node.prototype.animate = function(deltaTime)
 //--------------------------------------------------------------------------------------------------------//
 //  Scene Graph
 //--------------------------------------------------------------------------------------------------------//
-function Scene() 
-{
+function Scene() {
 	this.gl = null;
 	this.canvas = null;
 	this.root = new Node();
@@ -102,33 +97,29 @@ function Scene()
 //--------------------------------------------------------------------------------------------------------//
 //  Helpers
 //--------------------------------------------------------------------------------------------------------//
-Scene.prototype.loadShader = function(shaderName, shaderType, shaderTypeString)
-{
-  try 
-  {
-    var source = document.getElementById(shaderName).text;
-    var shader = this.gl.createShader(shaderType);
-    this.gl.shaderSource(shader, source);
-    this.gl.compileShader(shader);
+Scene.prototype.loadShader = function (shaderName, shaderType, shaderTypeString) {
+	try {
+		var source = document.getElementById(shaderName).text;
+		var shader = this.gl.createShader(shaderType);
+		this.gl.shaderSource(shader, source);
+		this.gl.compileShader(shader);
 
-    if (this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS))
-      return shader;
+		if (this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS))
+			return shader;
 
-    alert("Error compiling shader '" + shaderName + "', " + this.gl.getShaderInfoLog(shader));
-    return false;
-  }
+		alert("Error compiling shader '" + shaderName + "', " + this.gl.getShaderInfoLog(shader));
+		return false;
+	}
 
-  catch (e)
-  { 
-    alert("Exception : Cannot load shader '" + shaderName + "'!"); 
-  }
+	catch (e) {
+		alert("Exception : Cannot load shader '" + shaderName + "'!");
+	}
 }
 
 //--------------------------------------------------------------------------------------------------------//
 //  Scene Initialisation
 //--------------------------------------------------------------------------------------------------------//
-Scene.prototype.initialiseShaders = function ()
-{
+Scene.prototype.initialiseShaders = function () {
 	// Load vertex and fragment shaders
 	this.shaderVertex = this.loadShader("vertex-shader", this.gl.VERTEX_SHADER, "VERTEX");
 	this.shaderFragment = this.loadShader("fragment-shader", this.gl.FRAGMENT_SHADER, "FRAGMENT");
@@ -155,28 +146,25 @@ Scene.prototype.initialiseShaders = function ()
 	this.gl.useProgram(this.shaderProgram);
 }
 
-Scene.prototype.initialiseMatrices = function ()
-{
-	this.indexMatrixView = this.gl.getUniformLocation( this.shaderProgram, "viewMatrix" ); 
-  	this.indexMatrixModel = this.gl.getUniformLocation( this.shaderProgram, "modelMatrix" );
-  	this.indexMatrixProjection = this.gl.getUniformLocation( this.shaderProgram, "projectionMatrix" );
+Scene.prototype.initialiseMatrices = function () {
+	this.indexMatrixView = this.gl.getUniformLocation(this.shaderProgram, "viewMatrix");
+	this.indexMatrixModel = this.gl.getUniformLocation(this.shaderProgram, "modelMatrix");
+	this.indexMatrixProjection = this.gl.getUniformLocation(this.shaderProgram, "projectionMatrix");
 
 	matrixHelper.matrix4.makeIdentity(this.matrixView);
 	matrixHelper.matrix4.makeIdentity(this.matrixModel);
 	matrixHelper.matrix4.makeIdentity(this.matrixProjection);
 }
 
-Scene.prototype.initialiseFlags = function ()
-{
+Scene.prototype.initialiseFlags = function () {
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  	this.gl.viewport(0.0, 0.0, this.canvas.width, this.canvas.height);
+	this.gl.viewport(0.0, 0.0, this.canvas.width, this.canvas.height);
 
-  	this.gl.enable(this.gl.DEPTH_TEST);
-  	this.gl.depthFunc(this.gl.LESS);
+	this.gl.enable(this.gl.DEPTH_TEST);
+	this.gl.depthFunc(this.gl.LESS);
 }
 
-Scene.prototype.initialise = function(gl, canvas)
-{
+Scene.prototype.initialise = function (gl, canvas) {
 	this.gl = gl;
 	this.canvas = canvas;
 
@@ -188,71 +176,65 @@ Scene.prototype.initialise = function(gl, canvas)
 //--------------------------------------------------------------------------------------------------------//
 //  Bind model prior to rendering
 //--------------------------------------------------------------------------------------------------------//
-Scene.prototype.bindModelData = function(vertexBuffer, indexBuffer) 
-{
+Scene.prototype.bindModelData = function (vertexBuffer, indexBuffer) {
 	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
 
-    // Show how to interpret vertex format attributes
-    this.gl.vertexAttribPointer(this.indexPosition, 3, this.gl.FLOAT, this.gl.GL_FALSE, 11*4, 0);
-    this.gl.vertexAttribPointer(this.indexNormal, 3, this.gl.FLOAT, this.gl.GL_FALSE, 11*4, 3*4);
-    this.gl.vertexAttribPointer(this.indexColour, 3, this.gl.FLOAT, this.gl.GL_FALSE, 11*4, 6*4);
-    this.gl.vertexAttribPointer(this.indexTexCoords, 2, this.gl.FLOAT, this.gl.GL_FALSE, 11*4, 9*4);
+	// Show how to interpret vertex format attributes
+	this.gl.vertexAttribPointer(this.indexPosition, 3, this.gl.FLOAT, this.gl.GL_FALSE, 11 * 4, 0);
+	this.gl.vertexAttribPointer(this.indexNormal, 3, this.gl.FLOAT, this.gl.GL_FALSE, 11 * 4, 3 * 4);
+	this.gl.vertexAttribPointer(this.indexColour, 3, this.gl.FLOAT, this.gl.GL_FALSE, 11 * 4, 6 * 4);
+	this.gl.vertexAttribPointer(this.indexTexCoords, 2, this.gl.FLOAT, this.gl.GL_FALSE, 11 * 4, 9 * 4);
 
-    // Bind index buffer
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+	// Bind index buffer
+	this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 }
 
 //--------------------------------------------------------------------------------------------------------//
 //  Scene Graph transform management
 //--------------------------------------------------------------------------------------------------------//
-Scene.prototype.updateView = function() {
-    this.gl.uniformMatrix4fv(this.indexMatrixView, false, this.matrixView);
+Scene.prototype.updateView = function () {
+	this.gl.uniformMatrix4fv(this.indexMatrixView, false, this.matrixView);
 }
 
-Scene.prototype.updateProjection = function() {
-    this.gl.uniformMatrix4fv(this.indexMatrixProjection, false, this.matrixProjection);  	
+Scene.prototype.updateProjection = function () {
+	this.gl.uniformMatrix4fv(this.indexMatrixProjection, false, this.matrixProjection);
 }
 
-Scene.prototype.updateModel = function() {
-    this.gl.uniformMatrix4fv(this.indexMatrixModel, false, this.matrixModel); 
+Scene.prototype.updateModel = function () {
+	this.gl.uniformMatrix4fv(this.indexMatrixModel, false, this.matrixModel);
 }
 
-Scene.prototype.setViewFrustum = function(near, far, fov)
-{
-	matrixHelper.matrix4.makeProjection(this.matrixProjection, near, far, fov, this.canvas.aspect);	
+Scene.prototype.setViewFrustum = function (near, far, fov) {
+	matrixHelper.matrix4.makeProjection(this.matrixProjection, near, far, fov, this.canvas.aspect);
 }
 
-Scene.prototype.lookAt = function(position, target, up)
-{
+Scene.prototype.lookAt = function (position, target, up) {
 	matrixHelper.matrix4.lookAt(this.matrixView, position, target, up);
 }
 
-Scene.prototype.setModel = function(model)
-{
+Scene.prototype.setModel = function (model) {
 	matrixHelper.matrix4.to(this.matrixModel, model);
 }
 
 //--------------------------------------------------------------------------------------------------------//
 //  Scene Graph node managment
 //--------------------------------------------------------------------------------------------------------//
-Scene.prototype.findNode = function(nodeName) 
-{
+Scene.prototype.findNode = function (nodeName) {
 	var stack = [this.root];
 
-	while(stack.length != 0) {
+	while (stack.length != 0) {
 		var node = stack.pop();
-		
+
 		if (node.name.localeCompare(nodeName) == 0)
 			return node;
 
-		node.children.forEach(function(childNode) {
+		node.children.forEach(function (childNode) {
 			stack.push(childNode);
 		});
 	}
 }
 
-Scene.prototype.addNode = function(parent, nodeObject, nodeName, nodeType) 
-{
+Scene.prototype.addNode = function (parent, nodeObject, nodeName, nodeType) {
 	var node = new Node();
 	node.name = nodeName;
 	node.type = nodeType;
@@ -266,20 +248,18 @@ Scene.prototype.addNode = function(parent, nodeObject, nodeName, nodeType)
 //--------------------------------------------------------------------------------------------------------//
 //  Animation and Rendering scene graph methods
 //--------------------------------------------------------------------------------------------------------//
-Scene.prototype.beginFrame = function() 
-{
+Scene.prototype.beginFrame = function () {
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 	this.updateProjection();
 	this.updateView();
 }
 
-Scene.prototype.endFrame = function() {
+Scene.prototype.endFrame = function () {
 	this.gl.flush();
 }
 
-Scene.prototype.animate = function() 
-{
+Scene.prototype.animate = function () {
 	var now = Date.now();
 	var deltaTime = now - this.lastUpdate;
 	this.lastUpdate = now;
@@ -287,6 +267,6 @@ Scene.prototype.animate = function()
 	this.root.animate(deltaTime);
 }
 
-Scene.prototype.draw = function() {
+Scene.prototype.draw = function () {
 	this.root.draw(this, matrixHelper.matrix4.identity);
 }

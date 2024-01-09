@@ -25,6 +25,7 @@ var animateGame = function (gl, canvas) {
   //Game Set UP
   setbackground(game, '/Asteroids/assets/Space.png')
   var player = new Player(game)
+  // var saucer = new Saucer(game, 100)
   //  var ast = new LargeAsteroid(game)
 
   //var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
