@@ -1,7 +1,7 @@
 function Player(game) {
     this.lives = 3
-    this.name = null
-    this.points = 0
+    this.name = "JOe"
+    this.points = 15
     this.lasersArray = new Array()
 
     this.shipNode = this.createShip(game);

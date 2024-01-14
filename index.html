@@ -7,38 +7,72 @@
 
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: url('/Asteroids/assets/Space.png');
-      color: white;
-      padding: 0;
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
     .menu {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .menu h1 {
-      text-align: center;
-      font-size: 3em;
+      background-color: #000;
+      padding: 20px;
+      border: 2px solid #fff;
+      border-radius: 10px;
       margin-bottom: 20px;
     }
 
-    .menu button {
-      font-size: 1.5em;
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #fff;
+      color: #000;
       padding: 10px 20px;
-      margin: 10px;
-      background-color: #61dafb;
-      color: #282c34;
-      border: none;
+      font-size: 16px;
       cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      margin: 5px;
       transition: background-color 0.3s;
     }
 
-    .menu button:hover {
-      background-color: #4fa3d1;
+    button:hover {
+      background-color: #555;
+    }
+
+    .table-container {
+      background-color: #000;
+      padding: 20px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .scoreboard {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .scoreboard th,
+    .scoreboard td {
+      border: 1px solid #fff;
+      padding: 8px;
+    }
+
+    .scoreboard th {
+      background-color: #555;
     }
   </style>
 
@@ -207,6 +241,7 @@
   <script type="text/javascript" src="./game/game.js"></script>
   <script type="text/javascript" src="./game/script.js"></script>
   <script type="text/javascript" src="./attract/main_menu.js"></script>
+  <script type="text/javascript" src="./attract/scoreboard.js"></script>
 
 </head>
 
@@ -215,6 +250,21 @@
     <h1>Asteroids</h1>
     <button id="startButton" onclick="start_game()">Start Game</button>
     <button id="exitButton" onclick="exit()">Exit</button>
+  </div>
+  <div class="table-container">
+    <h2>High Scores</h2>
+    <table class="scoreboard" id="scoreboard">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table body content will be added dynamically using JavaScript -->
+      </tbody>
+    </table>
   </div>
 </body>
 
