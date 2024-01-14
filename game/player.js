@@ -3,7 +3,10 @@ function Player(game) {
     this.name = null
     this.points = 0
     this.lasersArray = new Array()
-    this.createShip(game)
+
+    this.shipNode = this.createShip(game);
+    this.shipNode.speed = 0.0001;
+    this.shipNode.angle = 0;
 }
 
 Player.prototype.createShip = function (game) {
@@ -40,7 +43,7 @@ Player.prototype.createShip = function (game) {
 
     model.material = material;
 
-    game.shipNode = scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
+    return scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
 }
 
 Player.prototype.checkForMovement = function (event, game) {
@@ -53,19 +56,19 @@ Player.prototype.checkForMovement = function (event, game) {
         // Up Arrow or W
         case 38:
         case 87: {
-            this.moveForward(game.shipNode);
+            this.moveForward();
             break;
         }
         // Left Arrow or A
         case 37:
         case 65: {
-            this.rotateLeft(game.shipNode);
+            this.rotateLeft();
             break;
         }
         // Right Arrow or D
         case 39:
         case 68: {
-            this.rotateRight(game.shipNode);
+            this.rotateRight();
             break;
         }
         default: {
@@ -74,35 +77,39 @@ Player.prototype.checkForMovement = function (event, game) {
     }
 }
 
-Player.prototype.moveForward = function (ship_node) {
+Player.prototype.moveForward = function () {
     var Mat4x4 = matrixHelper.matrix4;
 
-    var transform = Mat4x4.create()
+    x = this.shipNode.transform[12] + (this.shipNode.speed * Math.cos(this.shipNode.angle))
+    y = this.shipNode.transform[13] + (this.shipNode.speed * Math.sin(this.shipNode.angle))
 
-
-    ship_node.transform[13] += 0.0003
+    this.shipNode.transform[12] = x;
+    this.shipNode.transform[13] = y;
 }
 
-Player.prototype.rotateLeft = function (ship_node) {
+Player.prototype.rotateLeft = function () {
     var Mat4x4 = matrixHelper.matrix4;
 
     var zTransform = Mat4x4.create();
     Mat4x4.makeRotationZ(zTransform, 0.0005);
 
-    var copy = Mat4x4.clone(ship_node.transform);
+    var copy = Mat4x4.clone(this.shipNode.transform);
 
-    Mat4x4.multiply(ship_node.transform, copy, zTransform);
+    Mat4x4.multiply(this.shipNode.transform, copy, zTransform);
+
+    this.shipNode.angle += 0.0005
 }
 
-Player.prototype.rotateRight = function (ship_node) {
+Player.prototype.rotateRight = function () {
     var Mat4x4 = matrixHelper.matrix4;
 
     var zTransform = Mat4x4.create();
     Mat4x4.makeRotationZ(zTransform, -0.0005);
 
-    var copy = Mat4x4.clone(ship_node.transform);
+    var copy = Mat4x4.clone(this.shipNode.transform);
+    Mat4x4.multiply(this.shipNode.transform, copy, zTransform);
 
-    Mat4x4.multiply(ship_node.transform, copy, zTransform);
+    this.shipNode.angle -= 0.0005
 }
 
 Player.prototype.fireProjectile = function (game) {

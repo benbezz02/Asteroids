@@ -1,9 +1,4 @@
 function Game(gl, scene) {
-    this.wave = 0
-    this.shipNode = null
-    this.asteroidsArray = new Array()
-    this.saucersArray = new Array()
-
     this.gl = gl
     this.scene = scene
 
@@ -21,6 +16,11 @@ function Game(gl, scene) {
     light.attenuation = Light.ATTENUATION_TYPE.NONE;
     light.bind(gl, scene.shaderProgram, 0);
     this.lightNode = scene.addNode(scene.root, light, "lightNode", Node.NODE_TYPE.LIGHT);
+
+    this.wave = 0
+    this.player = new Player(this)
+    this.asteroidsArray = new Array()
+    this.saucersArray = new Array()
 }
 
 Game.prototype.AsteroidSpawnerChecker = function () {
