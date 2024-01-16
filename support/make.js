@@ -62,3 +62,27 @@ function makeQuad(positions, normals, colours, uvs) {
 
     return { vertex: vertexList, index: indexList };
 };
+
+function makeShipShape_wireframe() {
+    var vertexList = [], indexList = [];
+
+    for (var i = 0; i < 3; ++i) {
+        for (var k = 0; k < 3; ++k)
+            vertexList[vertexList.length] = positions[i][k];
+        for (var k = 0; k < 3; ++k)
+            vertexList[vertexList.length] = normals[i][k];
+        for (var k = 0; k < 3; ++k)
+            vertexList[vertexList.length] = colours[i][k];
+        for (var k = 0; k < 2; ++k)
+            vertexList[vertexList.length] = uvs[i][k];
+    }
+
+    indexList[indexList.length] = 0;
+    indexList[indexList.length] = 1;
+    indexList[indexList.length] = 2;
+    indexList[indexList.length] = 3;
+    indexList[indexList.length] = 4;
+    indexList[indexList.length] = 0;
+
+    return { vertex: vertexList, index: indexList };
+}

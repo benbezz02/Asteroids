@@ -11,7 +11,7 @@ var AssetsLoaded = function () {
   return assetsLoaded;
 }
 
-var animateGame = function (gl, canvas) {
+var animateModernGame = function (gl, canvas) {
 
   var Vec3 = matrixHelper.vector3;
   var Mat4x4 = matrixHelper.matrix4;
@@ -23,7 +23,7 @@ var animateGame = function (gl, canvas) {
   var game = new Game(gl, scene);
 
   //Game Set UP
-  setbackground(game, '/Asteroids/assets/Space.png')
+  // setbackground(game, '/Asteroids/assets/Space.png')
   // var saucer = new Saucer(game, 100)
   //  var ast = new LargeAsteroid(game)
 
@@ -49,6 +49,7 @@ var animateGame = function (gl, canvas) {
   scene.setViewFrustum(1, 100, 0.5236);
   var animate = function () {
     game.AsteroidSpawnerChecker();
+    //game.SaucerSpawnChecker();
 
     if (assetsCounter == assetsLoaded) {
 

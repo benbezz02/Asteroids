@@ -1,9 +1,9 @@
-function Saucer(game, points) {
-    this.points = points
-    this.speed = 0;
-    this.angularVel = 0;
+function Saucer(game, points, speed) {
+    this.points = points;
 
-    this.model = this.createSaucer(game);
+    this.saucerNode = this.createSaucer(game);
+    this.saucerNode.speed = speed;
+    this.saucerNode.angle = Math.random() * 360;
 };
 
 Saucer.prototype.createSaucer = function (game) {
@@ -39,19 +39,8 @@ Saucer.prototype.createSaucer = function (game) {
     material.bind(game.gl, scene.shaderProgram);
 
     model.material = material;
-    var node = scene.addNode(game.lightNode, model, "saucerNode", Node.NODE_TYPE.MODEL)
-    return node;
-}
 
-Saucer.prototype.Spawn = function () {
-    var randomNum = Math.random();
-
-    if (randomNum > 0.75) {
-        return true
-    }
-    else {
-        return false
-    }
+    return scene.addNode(game.lightNode, model, "saucerNode", Node.NODE_TYPE.MODEL);
 }
 
 Saucer.prototype.Shoot = function () {
@@ -77,10 +66,27 @@ Saucer.prototype.Shoot = function () {
     }
 }
 
-function SmallSaucer() {
-    Saucer.call(this, 1000);
+function SmallSaucer(game) {
+    Saucer.call(this, game, 1000, 0.03);
 };
 
-function LargeSaucer() {
-    Saucer.call(this, 200);
+function LargeSaucer(game) {
+    Saucer.call(this, game, 200, 0.01);
 };
+
+SaucerSpawner = function () {
+    var randomNum = Math.random();
+
+    if (randomNum > 0.75) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+SmallSaucer.prototype = Object.create(Saucer.prototype);
+LargeSaucer.prototype = Object.create(Saucer.prototype);
+
+SmallSaucer.prototype.constructor = SmallSaucer;
+LargeSaucer.prototype.constructor = LargeSaucer;

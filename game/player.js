@@ -17,8 +17,11 @@ Player.prototype.createShip = function (game) {
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
 
+
+    // var ship = makeShipShape();
+
     var model = new Model();
-    model.name = "quad";
+    model.name = "ship";
     model.index = quad.index;
     model.vertex = quad.vertex;
     model.compile(game.scene);

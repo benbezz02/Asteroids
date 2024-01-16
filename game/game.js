@@ -2,10 +2,11 @@ function Game(gl, scene) {
     this.gl = gl
     this.scene = scene
 
+    this.gameSeconds = 0;
+    this.gameTime = 0;
+
     // Set up lights
     var light = new Light();
-    //light.type = Light.LIGHT_TYPE.SPOT;
-    //light.type = Light.LIGHT_TYPE.POINT;
     light.type = Light.LIGHT_TYPE.DIRECTIONAL;
     light.setDiffuse([2, 2, 2]);
     light.setSpecular([1, 1, 1]);
@@ -27,5 +28,18 @@ Game.prototype.AsteroidSpawnerChecker = function () {
     if (this.asteroidsArray.length === 0) {
         this.wave += 1;
         AsteroidSpawner(this)
+    }
+}
+
+Game.prototype.SaucerSpawnChecker = function () {
+    console.log(Math.round((this.gameTime / 1000)))
+    if (Math.round((this.gameTime / 1000)) % 10 === 0) {
+        if (SaucerSpawner() === true) {
+            if (this.player.points < 10000) {
+                this.saucersArray.push(new SmallSaucer(this))
+            } else {
+                this.saucersArray.push(new LargeSaucer(this))
+            }
+        }
     }
 }
