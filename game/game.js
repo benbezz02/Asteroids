@@ -25,6 +25,78 @@ function Game(gl, scene) {
     this.saucersArray = new Array()
 }
 
+Game.prototype.runAllChecks = function () {
+    this.EdgeChecker()
+
+    // this.AsteroidCollisionChecker()
+    this.AsteroidSpawnerChecker()
+
+    // this.SaucerSpawnChecker()
+}
+
+Game.prototype.EdgeChecker = function () {
+    var width = 17
+    var height = 7
+
+    function updateTransformOnEdge(coordinate, size) {
+        if (coordinate >= size + 0.1) {
+            return -size;
+        } else if (coordinate <= -size - 0.1) {
+            return size;
+        }
+        return coordinate;
+    }
+
+    // Checking edges
+    this.player.shipNode.transform[12] = updateTransformOnEdge(
+        this.player.shipNode.transform[12],
+        width,
+    );
+
+    this.player.shipNode.transform[13] = updateTransformOnEdge(
+        this.player.shipNode.transform[13],
+        height,
+    );
+
+    for (var laser of this.player.lasersArray) {
+        if (laser.laserNode.transform[12] >= width) {
+            this.player.lasersArray.splice(laser.laserArrayPosition, 1)
+        } else if (laser.laserNode.transform[12] <= -width) {
+            this.player.lasersArray.splice(laser.laserArrayPosition, 1)
+        }
+
+        if (laser.laserNode.transform[13] >= height) {
+            this.player.lasersArray.splice(laser.laserArrayPosition, 1)
+        } else if (laser.laserNode.transform[13] <= -height) {
+            this.player.lasersArray.splice(laser.laserArrayPosition, 1)
+        }
+    }
+
+    for (var asteroid of this.asteroidsArray) {
+        asteroid.asteroidNode.transform[12] = updateTransformOnEdge(
+            this.player.shipNode.transform[12],
+            width,
+        );
+
+        asteroid.asteroidNode.transform[13] = updateTransformOnEdge(
+            this.player.shipNode.transform[13],
+            height,
+        );
+    }
+
+    for (var saucer of this.saucersArray) {
+        saucer.saucerNode.transform[12] = updateTransformOnEdge(
+            this.player.shipNode.transform[12],
+            width,
+        );
+
+        saucer.saucerNode.transform[13] = updateTransformOnEdge(
+            this.player.shipNode.transform[13],
+            height,
+        );
+    }
+}
+
 Game.prototype.AsteroidSpawnerChecker = function () {
     if (this.asteroidsArray.length === 0) {
         this.wave += 1;

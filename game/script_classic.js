@@ -48,8 +48,7 @@ var animateClassicGame = function (gl, canvas) {
   //--------------------------------------------------------------------------------------------------------//
   scene.setViewFrustum(1, 100, 0.5236);
   var animate = function () {
-    game.AsteroidSpawnerChecker();
-    //game.SaucerSpawnChecker();
+    game.runAllChecks();
 
     if (assetsCounter == assetsLoaded) {
 
@@ -63,33 +62,6 @@ var animateClassicGame = function (gl, canvas) {
       scene.animate();
       scene.draw();
       scene.endFrame();
-
-      // Checking edges
-      for (var asteroid of game.asteroidsArray) {
-        if (asteroid.asteroidNode.transform[13] >= 7.1) {
-          asteroid.asteroidNode.transform[13] = -7
-        } else if (asteroid.asteroidNode.transform[13] <= -7.1) {
-          asteroid.asteroidNode.transform[13] = 7
-        }
-
-        if (asteroid.asteroidNode.transform[12] >= 17.1) {
-          asteroid.asteroidNode.transform[12] = -17
-        } else if (asteroid.asteroidNode.transform[12] <= -17.1) {
-          asteroid.asteroidNode.transform[12] = 17
-        }
-      }
-
-      if (game.player.shipNode.transform[13] >= 7.1) {
-        game.player.shipNode.transform[13] = -7
-      } else if (game.player.shipNode.transform[13] <= -7.1) {
-        game.player.shipNode.transform[13] = 7
-      }
-
-      if (game.player.shipNode.transform[12] >= 17.1) {
-        game.player.shipNode.transform[12] = -17
-      } else if (game.player.shipNode.transform[12] <= -17.1) {
-        game.player.shipNode.transform[12] = 17
-      }
     }
     window.requestAnimationFrame(animate);
   };

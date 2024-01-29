@@ -35,11 +35,10 @@ Asteroid.prototype.createAsteroid = function (game) {
     material.setShininess(8.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(game.gl, scene.shaderProgram);
+    material.bind(game.gl, game.scene.shaderProgram);
 
     model.material = material;
-    var asteroidNode = scene.addNode(game.lightNode, model, "asteroidNode", Node.NODE_TYPE.MODEL)
-    return asteroidNode;
+    return game.scene.addNode(game.lightNode, model, "asteroidNode", Node.NODE_TYPE.MODEL);
 }
 
 function SmallAsteroid(arrayPosition, game) {

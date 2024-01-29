@@ -3,10 +3,11 @@ function Player(game) {
     this.name = "Joe"
     this.points = 15
     this.lasersArray = new Array()
+    this.laserCounter = 0
 
     this.shipNode = this.createShip(game);
     this.shipNode.speed = 0.0001;
-    this.shipNode.angle = 0;
+    this.shipNode.angle = 1.7;
 }
 
 Player.prototype.createShip = function (game) {
@@ -16,9 +17,6 @@ Player.prototype.createShip = function (game) {
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
-
-
-    // var ship = makeShipShape();
 
     var model = new Model();
     model.name = "ship";
@@ -46,7 +44,7 @@ Player.prototype.createShip = function (game) {
 
     model.material = material;
 
-    return scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
+    return game.scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
 }
 
 Player.prototype.checkForMovement = function (event, game) {
@@ -116,14 +114,29 @@ Player.prototype.rotateRight = function () {
 }
 
 Player.prototype.fireProjectile = function (game) {
-    /*
-    var laser = new Projectile(game)
-    this.lasersArray.push(scene.addNode(game.lightNode, laser, "laserNode", Node.NODE_TYPE.MODEL))
+    var laser = new Projectile(game, this.shipNode.angle, this.laserCounter)
+    laser.laserNode.transform[12] = this.shipNode.transform[12]
+    laser.laserNode.transform[13] = this.shipNode.transform[13]
 
-    this.lasersArray[0].animationCallback = function () {
-        this.transform[13] += laser.speed;
+    var Mat4x4 = matrixHelper.matrix4;
+
+    var zTransform = Mat4x4.create();
+    Mat4x4.makeRotationZ(zTransform, this.shipNode.angle);
+
+    var copy = Mat4x4.clone(laser.laserNode.transform);
+    Mat4x4.multiply(laser.laserNode.transform, copy, zTransform);
+
+    this.lasersArray.push(laser)
+
+    this.lasersArray[this.laserCounter].laserNode.animationCallback = function () {
+        x = this.transform[12] + (this.speed * Math.cos(this.angle))
+        y = this.transform[13] + (this.speed * Math.sin(this.angle))
+
+        this.transform[12] = x;
+        this.transform[13] = y;
     };
-*/
+
+    this.laserCounter++
 }
 
 Player.prototype.checkAdditionalLife = function () {
