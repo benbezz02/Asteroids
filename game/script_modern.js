@@ -72,10 +72,10 @@ var animateModernGame = function (gl, canvas) {
           asteroid.asteroidNode.transform[13] = 7
         }
 
-        if (asteroid.asteroidNode.transform[12] >= 17.1) {
-          asteroid.asteroidNode.transform[12] = -17
-        } else if (asteroid.asteroidNode.transform[12] <= -17.1) {
-          asteroid.asteroidNode.transform[12] = 17
+        if (asteroid.asteroidNode.transform[12] >= 14.1) {
+          asteroid.asteroidNode.transform[12] = -14
+        } else if (asteroid.asteroidNode.transform[12] <= -14.1) {
+          asteroid.asteroidNode.transform[12] = 14
         }
       }
 
@@ -85,10 +85,10 @@ var animateModernGame = function (gl, canvas) {
         game.player.shipNode.transform[13] = 7
       }
 
-      if (game.player.shipNode.transform[12] >= 17.1) {
-        game.player.shipNode.transform[12] = -17
-      } else if (game.player.shipNode.transform[12] <= -17.1) {
-        game.player.shipNode.transform[12] = 17
+      if (game.player.shipNode.transform[12] >= 14.1) {
+        game.player.shipNode.transform[12] = -14
+      } else if (game.player.shipNode.transform[12] <= -14.1) {
+        game.player.shipNode.transform[12] = 14
       }
     }
     window.requestAnimationFrame(animate);

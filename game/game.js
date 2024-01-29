@@ -20,6 +20,7 @@ function Game(gl, scene) {
 
     this.wave = 0
     this.player = new Player(this)
+
     this.asteroidsArray = new Array()
     this.saucersArray = new Array()
 }
@@ -40,6 +41,25 @@ Game.prototype.SaucerSpawnChecker = function () {
             } else {
                 this.saucersArray.push(new LargeSaucer(this))
             }
+        }
+    }
+}
+
+Game.prototype.AsteroidCollisionChecker = function () {
+    for (var asteroid in this.asteroidsArray) {
+        for (var playerLaser in this.player.lasersArray) {
+            let closestX = Math.max(cube.minX, Math.min(sphere.x, cube.maxX));
+            let closestY = Math.max(cube.minY, Math.min(sphere.y, cube.maxY));
+            let closestZ = Math.max(cube.minZ, Math.min(sphere.z, cube.maxZ));
+
+            // Calculate the distance between the closest point on the cube and the sphere's center
+            let distanceX = closestX - sphere.x;
+            let distanceY = closestY - sphere.y;
+            let distanceZ = closestZ - sphere.z;
+            let distanceSquared = distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
+
+            // Check if the distance is less than or equal to the sphere's radius
+            return distanceSquared <= sphere.radius * sphere.radius;
         }
     }
 }

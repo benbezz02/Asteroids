@@ -1,6 +1,6 @@
 function Player(game) {
     this.lives = 3
-    this.name = "JOe"
+    this.name = "Joe"
     this.points = 15
     this.lasersArray = new Array()
 

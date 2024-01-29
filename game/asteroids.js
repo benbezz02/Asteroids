@@ -1,6 +1,8 @@
-function Asteroid(game, points, speed, rotationalSpeed) {
+function Asteroid(arrayPosition, game, points, speed, rotationalSpeed, radius) {
+    this.arrayPosition = arrayPosition
     this.points = points;
 
+    this.radius = radius
     this.asteroidNode = this.createAsteroid(game);
     this.asteroidNode.speed = speed;
     this.asteroidNode.angle = Math.random() * 360;
@@ -9,7 +11,7 @@ function Asteroid(game, points, speed, rotationalSpeed) {
 
 Asteroid.prototype.createAsteroid = function (game) {
 
-    var sphere = makeSphere([0, 0, 0], 0.5, 50, 50, [0, 0, 0]);
+    var sphere = makeSphere([0, 0, 0], this.radius, 50, 50, [0, 0, 0]);
 
     var model = new Model();
     model.name = "sphere";
@@ -40,16 +42,16 @@ Asteroid.prototype.createAsteroid = function (game) {
     return asteroidNode;
 }
 
-function SmallAsteroid(game) {
-    Asteroid.call(this, game, 100, 0.075, 10);
+function SmallAsteroid(arrayPosition, game) {
+    Asteroid.call(this, arrayPosition, game, 100, 0.075, 10, 0.4);
 };
 
-function MediumAsteroid(game) {
-    Asteroid.call(this, game, 50, 0.05, 7.5);
+function MediumAsteroid(arrayPosition, game) {
+    Asteroid.call(this, arrayPosition, game, 50, 0.05, 7.5, 0.75);
 };
 
-function LargeAsteroid(game) {
-    Asteroid.call(this, game, 20, 0.01, 5);
+function LargeAsteroid(arrayPosition, game) {
+    Asteroid.call(this, arrayPosition, game, 20, 0.01, 5, 1.25);
 };
 
 AsteroidSpawner = function (game) {
@@ -59,13 +61,13 @@ AsteroidSpawner = function (game) {
         var ang = 0
 
         if (i % 4 === 0) {
-            var asteroid = new LargeAsteroid(game)
+            var asteroid = new LargeAsteroid(i, game)
         }
         else if (i % 3 === 0) {
-            var asteroid = new MediumAsteroid(game)
+            var asteroid = new MediumAsteroid(i, game)
         }
         else {
-            var asteroid = new SmallAsteroid(game)
+            var asteroid = new SmallAsteroid(i, game)
         }
 
         game.asteroidsArray.push(asteroid)
