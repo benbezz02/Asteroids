@@ -47,15 +47,20 @@ var animateModernGame = function (gl, canvas) {
   // Set up render loop
   //--------------------------------------------------------------------------------------------------------//
   scene.setViewFrustum(1, 100, 0.5236);
+
+  var spacebarCounter = 0
+
   var animate = function () {
-    game.AsteroidSpawnerChecker();
-    //game.SaucerSpawnChecker();
+    game.runAllChecks()
 
     if (assetsCounter == assetsLoaded) {
 
       window.addEventListener('keydown', function (event) {
-        game.player.checkForMovement(event, game);
+        spacebarCounter += 1
+        game.player.checkForMovement(event, game, spacebarCounter);
       });
+
+      spacebarCounter = 0
 
       scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
 
@@ -64,32 +69,7 @@ var animateModernGame = function (gl, canvas) {
       scene.draw();
       scene.endFrame();
 
-      // Checking edges
-      for (var asteroid of game.asteroidsArray) {
-        if (asteroid.asteroidNode.transform[13] >= 7.1) {
-          asteroid.asteroidNode.transform[13] = -7
-        } else if (asteroid.asteroidNode.transform[13] <= -7.1) {
-          asteroid.asteroidNode.transform[13] = 7
-        }
-
-        if (asteroid.asteroidNode.transform[12] >= 14.1) {
-          asteroid.asteroidNode.transform[12] = -14
-        } else if (asteroid.asteroidNode.transform[12] <= -14.1) {
-          asteroid.asteroidNode.transform[12] = 14
-        }
-      }
-
-      if (game.player.shipNode.transform[13] >= 7.1) {
-        game.player.shipNode.transform[13] = -7
-      } else if (game.player.shipNode.transform[13] <= -7.1) {
-        game.player.shipNode.transform[13] = 7
-      }
-
-      if (game.player.shipNode.transform[12] >= 14.1) {
-        game.player.shipNode.transform[12] = -14
-      } else if (game.player.shipNode.transform[12] <= -14.1) {
-        game.player.shipNode.transform[12] = 14
-      }
+      game.EdgeChecker();
     }
     window.requestAnimationFrame(animate);
   };

@@ -1,14 +1,12 @@
-function Projectile(game, angle, arrayPosition) {
-    this.laserArrayPosition = arrayPosition
-
+function Projectile(game, angle) {
     this.laserNode = this.createProjectile(game);
-    this.laserNode.speed = 0.1;
+    this.laserNode.speed = 0.2;
     this.laserNode.angle = angle
 }
 
 Projectile.prototype.createProjectile = function (game) {
     var quad = makeQuad(
-        [[-0.15, -0.15, 0], [0.15, -0.15, 0], [0.15, 0.15, 0], [-0.15, 0.15, 0]],
+        [[-0.1, -0.1, 0], [0.1, -0.1, 0], [0.1, 0.1, 0], [-0.1, 0.1, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);

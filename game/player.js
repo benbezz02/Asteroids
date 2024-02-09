@@ -47,11 +47,13 @@ Player.prototype.createShip = function (game) {
     return game.scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
 }
 
-Player.prototype.checkForMovement = function (event, game) {
+Player.prototype.checkForMovement = function (event, game, spacebarCounter) {
     switch (event.keyCode) {
         // Space Bar
         case 32: {
-            this.fireProjectile(game);
+            if (spacebarCounter === 1) {
+                this.fireProjectile(game);
+            }
             break;
         }
         // Up Arrow or W
@@ -79,8 +81,6 @@ Player.prototype.checkForMovement = function (event, game) {
 }
 
 Player.prototype.moveForward = function () {
-    var Mat4x4 = matrixHelper.matrix4;
-
     x = this.shipNode.transform[12] + (this.shipNode.speed * Math.cos(this.shipNode.angle))
     y = this.shipNode.transform[13] + (this.shipNode.speed * Math.sin(this.shipNode.angle))
 
@@ -114,7 +114,7 @@ Player.prototype.rotateRight = function () {
 }
 
 Player.prototype.fireProjectile = function (game) {
-    var laser = new Projectile(game, this.shipNode.angle, this.laserCounter)
+    var laser = new Projectile(game, this.shipNode.angle)
     laser.laserNode.transform[12] = this.shipNode.transform[12]
     laser.laserNode.transform[13] = this.shipNode.transform[13]
 
@@ -126,9 +126,7 @@ Player.prototype.fireProjectile = function (game) {
     var copy = Mat4x4.clone(laser.laserNode.transform);
     Mat4x4.multiply(laser.laserNode.transform, copy, zTransform);
 
-    this.lasersArray.push(laser)
-
-    this.lasersArray[this.laserCounter].laserNode.animationCallback = function () {
+    laser.laserNode.animationCallback = function () {
         x = this.transform[12] + (this.speed * Math.cos(this.angle))
         y = this.transform[13] + (this.speed * Math.sin(this.angle))
 
@@ -136,7 +134,7 @@ Player.prototype.fireProjectile = function (game) {
         this.transform[13] = y;
     };
 
-    this.laserCounter++
+    this.lasersArray.push(laser)
 }
 
 Player.prototype.checkAdditionalLife = function () {

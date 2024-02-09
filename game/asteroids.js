@@ -57,6 +57,7 @@ AsteroidSpawner = function (game) {
     var Mat4x4 = matrixHelper.matrix4;
 
     for (var i = 0; i < (game.wave + 4); i++) {
+
         var ang = 0
 
         if (i % 4 === 0) {
@@ -68,13 +69,17 @@ AsteroidSpawner = function (game) {
         else {
             var asteroid = new SmallAsteroid(i, game)
         }
-
         game.asteroidsArray.push(asteroid)
     }
 
-    var ang = 0
 
     for (var j = 0; j < game.asteroidsArray.length; j++) {
+        let { x, y } = generateRandomCoordinatesOnEdge()
+        game.asteroidsArray[j].asteroidNode.transform[12] = x
+        game.asteroidsArray[j].asteroidNode.transform[13] = y
+
+        var ang = 0
+
         game.asteroidsArray[j].asteroidNode.animationCallback = function () {
 
             x = this.transform[12] + (this.speed * Math.cos(this.angle))
@@ -96,3 +101,34 @@ LargeAsteroid.prototype = Object.create(Asteroid.prototype);
 SmallAsteroid.prototype.constructor = SmallAsteroid;
 MediumAsteroid.prototype.constructor = MediumAsteroid;
 LargeAsteroid.prototype.constructor = LargeAsteroid;
+
+
+generateRandomCoordinatesOnEdge = function () {
+    // Select a random edge of the square (top, bottom, left, or right)
+    const edges = ['top', 'bottom', 'left', 'right'];
+    const edge = edges[Math.floor(Math.random() * edges.length)];
+
+    // Generate random coordinates on the selected edge
+    let x, y;
+    switch (edge) {
+        case 'top':
+            x = (Math.random() * 28.8 - 14.4).toFixed(1);
+            y = 6.9;
+            break;
+        case 'bottom':
+            x = (Math.random() * 28.8 - 14.4).toFixed(1);
+            y = -6.9;
+            break;
+        case 'left':
+            x = -14.4;
+            y = (Math.random() * 13.8 - 6.9).toFixed(1);
+            break;
+        case 'right':
+            x = 14.4;
+            y = (Math.random() * 13.8 - 6.9).toFixed(1);
+            break;
+    }
+    x = parseFloat(x)
+    y = parseFloat(y)
+    return { x, y };
+}
