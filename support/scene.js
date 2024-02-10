@@ -248,6 +248,14 @@ Scene.prototype.addNode = function (parent, nodeObject, nodeName, nodeType) {
 	return node;
 }
 
+Scene.prototype.removeNode = function (node) {
+	node.name = null;
+	node.type = null;
+	node.nodeObject = null;
+
+	parent.children = null;
+}
+
 //--------------------------------------------------------------------------------------------------------//
 //  Animation and Rendering scene graph methods
 //--------------------------------------------------------------------------------------------------------//

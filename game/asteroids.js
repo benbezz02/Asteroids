@@ -93,6 +93,62 @@ AsteroidSpawner = function (game) {
     }
 }
 
+AsteroidDestroyer = function (game, asteroid) {
+    var Mat4x4 = matrixHelper.matrix4;
+
+    x = asteroid.asteroidNode.transform[12]
+    y = asteroid.asteroidNode.transform[13]
+
+    this.scene.removeNode(asteroid.asteroidNode);
+
+    if (asteroid instanceof LargeAsteroid) {
+        var asteroid1 = new MediumAsteroid(game)
+        var asteroid2 = new MediumAsteroid(game)
+        game.player.score += asteroid.points
+    } else if (asteroid instanceof MediumAsteroid) {
+        var asteroid1 = new SmallAsteroid(game)
+        var asteroid2 = new SmallAsteroid(game)
+        game.player.score += asteroid.points
+    } else if (asteroid instanceof SmallAsteroid) {
+        game.player.score += asteroid.points
+        return;
+    }
+
+    asteroid1.asteroidNode.transform[12] = x
+    asteroid1.asteroidNode.transform[13] = y
+    asteroid2.asteroidNode.transform[12] = x
+    asteroid2.asteroidNode.transform[13] = y
+
+    var ang = 0
+
+    asteroid1.asteroidNode.animationCallback = function () {
+
+        x = this.transform[12] + (this.speed * Math.cos(this.angle))
+        y = this.transform[13] + (this.speed * Math.sin(this.angle))
+
+        ang += this.rotationalSpeed / 1000;
+        Mat4x4.makeRotationY(this.transform, ang);
+
+        this.transform[12] = x;
+        this.transform[13] = y;
+    }
+
+    asteroid2.asteroidNode.animationCallback = function () {
+
+        x = this.transform[12] + (this.speed * Math.cos(this.angle))
+        y = this.transform[13] + (this.speed * Math.sin(this.angle))
+
+        ang += this.rotationalSpeed / 1000;
+        Mat4x4.makeRotationY(this.transform, ang);
+
+        this.transform[12] = x;
+        this.transform[13] = y;
+    }
+
+    game.asteroidsArray.push(asteroid1)
+    game.asteroidsArray.push(asteroid2)
+}
+
 SmallAsteroid.prototype = Object.create(Asteroid.prototype);
 MediumAsteroid.prototype = Object.create(Asteroid.prototype);
 LargeAsteroid.prototype = Object.create(Asteroid.prototype);

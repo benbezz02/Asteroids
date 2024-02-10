@@ -1,5 +1,3 @@
-var gameStateMachine = new StateMachine();
-
 var start = function () {
     gameStateMachine.changeState(STATES.ATTRACT_MODE);
 }

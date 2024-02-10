@@ -43,7 +43,7 @@ var addHeart = function (game) {
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
 
     var model = new Model();
-    model.name = "quad";
+    model.name = "heart";
     model.index = quad.index;
     model.vertex = quad.vertex;
     model.compile(game.scene);
@@ -67,6 +67,5 @@ var addHeart = function (game) {
     material.bind(game.gl, game.scene.shaderProgram);
 
     model.material = material;
-
-    return game.scene.addNode(game.lightNode, model, "backgroundNode", Node.NODE_TYPE.MODEL);
+    return game.scene.addNode(game.lightNode, model, "heartNode", Node.NODE_TYPE.MODEL);
 }

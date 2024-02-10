@@ -17,7 +17,7 @@ function Game(gl, scene) {
 
     this.wave = 0
     this.player = new Player(this)
-    this.livesArray = new Array()
+    this.lifesArray = new Array()
 
     this.asteroidsArray = new Array()
     this.saucersArray = new Array()
@@ -25,6 +25,7 @@ function Game(gl, scene) {
 
 Game.prototype.runAllChecks = function () {
     this.AsteroidCollisionChecker()
+    this.PlayerCollisionChecker()
     this.AsteroidSpawnerChecker()
     this.LivesChecker()
     this.ScoreWaveChecker()
@@ -56,9 +57,11 @@ Game.prototype.EdgeChecker = function () {
 
     for (let i = 0; i < this.player.lasersArray.length; i++) {
         if (this.player.lasersArray[i].laserNode.transform[12] >= width || this.player.lasersArray[i].laserNode.transform[12] <= -width) {
+            this.scene.removeNode(this.player.lasersArray[i].laserNode);
             this.player.lasersArray.splice(i, 1)
             i--
         } else if (this.player.lasersArray[i].laserNode.transform[13] >= height || this.player.lasersArray[i].laserNode.transform[13] <= -height) {
+            this.scene.removeNode(this.player.lasersArray[i].laserNode);
             this.player.lasersArray.splice(i, 1)
             i--
         }
@@ -97,6 +100,22 @@ Game.prototype.SaucerSpawnChecker = function () {
     }, 10000);
 }
 
+Game.prototype.PlayerCollisionChecker = function () {
+    for (let i = 0; i < this.asteroidsArray.length; i++) {
+        let distanceX = Math.pow(this.asteroidsArray[i].asteroidNode.transform[12] - this.player.shipNode.transform[12], 2);
+        let distanceY = Math.pow(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.shipNode.transform[13], 2);
+        let distance = Math.sqrt(distanceX + distanceY)
+
+        if ((distance <= (0.7 + this.asteroidsArray[i].radius)) && (this.player.isHittable === true)) {
+            this.player.getsHit();
+            AsteroidDestroyer(this, this.asteroidsArray[i]);
+            this.asteroidsArray.splice(i, 1);
+            i--;
+        }
+
+    }
+}
+
 Game.prototype.AsteroidCollisionChecker = function () {
     for (let i = 0; i < this.asteroidsArray.length; i++) {
         for (let j = 0; j < this.player.lasersArray.length; j++) {
@@ -104,37 +123,48 @@ Game.prototype.AsteroidCollisionChecker = function () {
             let distanceY = Math.pow(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
             let distance = Math.sqrt(distanceX + distanceY)
 
-            if (distance <= (0.145 + this.asteroidsArray[i].radius)) {
+            if (distance <= (0.141 + this.asteroidsArray[i].radius)) {
+                this.scene.removeNode(this.player.lasersArray[j].laserNode);
+                this.player.lasersArray.splice(j, 1);
+                j--;
 
+                var asteroid = this.asteroidsArray[i];
                 this.asteroidsArray.splice(i, 1);
                 i--;
 
-                console.log(this.asteroidsArray.length)
+                AsteroidDestroyer(this, asteroid);
             }
         }
     }
 }
 
 Game.prototype.LivesChecker = function () {
-    if (this.player.lives <= 0) {
+    if (this.player.lifes <= 0) {
         window.location.href = '/Asteroids/gameover/over.html';
         return
     }
 
-    if (this.livesArray.length === 0) {
-        for (let i = 1; i <= this.player.lives; i++) {
+    if (this.lifesArray.length === 0) {
+        for (let i = 1; i <= this.player.lifes; i++) {
             var heart = addHeart(this);
             matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + (i * 0.6), 5, 3]);
-            this.livesArray.push(heart)
+            console.log(heart.name)
+            this.lifesArray.push(heart)
+            var heart1 = this.lifesArray[this.lifesArray.length - 1];
+            console.log(heart1.transform[12])
         }
     }
 
-    if (this.player.lives < this.livesArray) {
-        this.livesArray.pop()
-    } else if (this.player.lives > this.livesArray) {
+    this.player.checkAdditionalLife();
+
+    if (this.player.lifes < this.lifesArray.length) {
+        var heart = this.lifesArray[this.lifesArray.length - 1]; // no idea why -1 alone is not working
+        this.scene.removeNode(heart);
+        this.lifesArray.pop()
+    } else if (this.player.lifes > this.lifesArray.length) {
         var heart = addHeart(this);
-        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lives + 1) * 0.6), 5, 3]);
-        this.livesArray.push(heart)
+        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lifes + 1) * 0.6), 5, 3]);
+        this.lifesArray.push(heart)
     }
 
 }

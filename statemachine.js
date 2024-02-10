@@ -36,3 +36,5 @@ StateMachine.prototype.changeState = function (state) {
 
     console.log(this.currentState)
 }
+
+var gameStateMachine = new StateMachine();

@@ -1,7 +1,11 @@
 function Player(game) {
-    this.lives = 3
+    this.lifes = 3
+    this.numAdditionaLifes = 0
+    this.isHittable = true
+
     this.name = "Joe"
     this.score = 0
+
     this.lasersArray = new Array()
     this.laserCounter = 0
 
@@ -136,8 +140,18 @@ Player.prototype.fireProjectile = function (game) {
     this.lasersArray.push(laser)
 }
 
+Player.prototype.getsHit = function () {
+    this.lifes--
+    this.isHittable = false;
+    setTimeout(() => {
+        this.isHittable = true;
+    }, 1000);
+}
+
 Player.prototype.checkAdditionalLife = function () {
-    if ((this.score % 10000) == 0) {
-        this.lives += 1;
+
+    if ((this.score / 10000) < this.numAdditionaLifes) {
+        this.lifes++
+        this.numAdditionaLifes++
     }
 }

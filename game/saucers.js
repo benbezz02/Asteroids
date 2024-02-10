@@ -81,9 +81,9 @@ SaucerSpawner = function (game) {
     }
 
     if (game.player.points <= 10000) {
-        var saucer = new SmallSaucer(game)
-    } else {
         var saucer = new LargeSaucer(game)
+    } else {
+        var saucer = new SmallSaucer(game)
     }
 
     saucer.saucerNode.transform[12] = (Math.random() * 26.8 - 13.4).toFixed(1);
