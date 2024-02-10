@@ -6,8 +6,8 @@ function Player(game) {
     this.laserCounter = 0
 
     this.shipNode = this.createShip(game);
-    this.shipNode.speed = 0.0001;
-    this.shipNode.angle = 1.7;
+    this.shipNode.speed = 0.0005;
+    this.shipNode.angle = 0;
 }
 
 Player.prototype.createShip = function (game) {
@@ -27,7 +27,7 @@ Player.prototype.createShip = function (game) {
     var material = new Material();
 
     const shipImage = new Image();
-    shipImage.src = '/Asteroids/assets/ship_2.png';
+    shipImage.src = '/Asteroids/assets/Pack2/Spaceship1.png';
     NewAsset();
 
     shipImage.onload = () => {
@@ -43,7 +43,6 @@ Player.prototype.createShip = function (game) {
     material.bind(game.gl, game.scene.shaderProgram);
 
     model.material = material;
-
     return game.scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
 }
 

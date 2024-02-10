@@ -3,19 +3,19 @@ function Saucer(game, points, speed) {
 
     this.saucerNode = this.createSaucer(game);
     this.saucerNode.speed = speed;
-    this.saucerNode.angle = Math.random() * 360;
+    this.saucerNode.angle = 0.5;
 };
 
 Saucer.prototype.createSaucer = function (game) {
 
     var quad = makeQuad(
-        [[-0.5, -0.5, 0], [0.5, -0.5, 0], [0.5, 0.5, 0], [-0.5, 0.5, 0]],
+        [[-0.45, -0.45, 0], [0.45, -0.45, 0], [0.45, 0.45, 0], [-0.45, 0.45, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
 
     var model = new Model();
-    model.name = "quad";
+    model.name = "saucer";
     model.index = quad.index;
     model.vertex = quad.vertex;
     model.compile(game.scene);
@@ -23,7 +23,7 @@ Saucer.prototype.createSaucer = function (game) {
     var material = new Material();
 
     const saucerImage = new Image();
-    saucerImage.src = '/Asteroids/assets/Aliens1.png';
+    saucerImage.src = '/Asteroids/assets/Pack2/UFOs/Beholder/Beholder.png';
     NewAsset();
 
     saucerImage.onload = () => {
@@ -33,14 +33,13 @@ Saucer.prototype.createSaucer = function (game) {
     };
 
     material.setDiffuse([1, 1, 1]);
-    material.setShininess(8.0);
+    material.setShininess(5.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(game.gl, scene.shaderProgram);
+    material.bind(game.gl, game.scene.shaderProgram);
 
     model.material = material;
-
-    return scene.addNode(game.lightNode, model, "saucerNode", Node.NODE_TYPE.MODEL);
+    return game.scene.addNode(game.lightNode, model, "saucerNode", Node.NODE_TYPE.MODEL);
 }
 
 Saucer.prototype.Shoot = function () {
@@ -74,15 +73,34 @@ function LargeSaucer(game) {
     Saucer.call(this, game, 200, 0.01);
 };
 
-SaucerSpawner = function () {
+SaucerSpawner = function (game) {
     var randomNum = Math.random();
 
-    if (randomNum > 0.75) {
-        return true
+    if (randomNum <= 0.75) {
+        return
     }
-    else {
-        return false
+
+    if (game.player.points <= 10000) {
+        var saucer = new SmallSaucer(game)
+    } else {
+        var saucer = new LargeSaucer(game)
     }
+
+    saucer.saucerNode.transform[12] = (Math.random() * 26.8 - 13.4).toFixed(1);
+    saucer.saucerNode.transform[13] = 6.9;
+
+    saucer.saucerNode.animationCallback = function () {
+        if (this.transform[12] >= 13 || this.transform[12] <= -13) {
+            this.angle = Math.PI - this.angle;
+        }
+
+        x = this.transform[12] + (this.speed * Math.cos(this.angle))
+        y = this.transform[13] + (this.speed * Math.sin(this.angle))
+
+        this.transform[12] = x;
+        this.transform[13] = y;
+    }
+    game.saucersArray.push(saucer)
 }
 
 SmallSaucer.prototype = Object.create(Saucer.prototype);

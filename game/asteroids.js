@@ -1,5 +1,4 @@
-function Asteroid(arrayPosition, game, points, speed, rotationalSpeed, radius) {
-    this.arrayPosition = arrayPosition
+function Asteroid(game, points, speed, rotationalSpeed, radius) {
     this.points = points;
 
     this.radius = radius
@@ -22,7 +21,7 @@ Asteroid.prototype.createAsteroid = function (game) {
     var material = new Material();
 
     const asteroidImage = new Image();
-    asteroidImage.src = '/Asteroids/assets/black-stone-texture.jpg';
+    asteroidImage.src = '/Asteroids/assets/Pack1/black-stone-texture.jpg';
     NewAsset();
 
     asteroidImage.onload = () => {
@@ -41,16 +40,16 @@ Asteroid.prototype.createAsteroid = function (game) {
     return game.scene.addNode(game.lightNode, model, "asteroidNode", Node.NODE_TYPE.MODEL);
 }
 
-function SmallAsteroid(arrayPosition, game) {
-    Asteroid.call(this, arrayPosition, game, 100, 0.075, 10, 0.4);
+function SmallAsteroid(game) {
+    Asteroid.call(this, game, 100, 0.075, 10, 0.4);
 };
 
-function MediumAsteroid(arrayPosition, game) {
-    Asteroid.call(this, arrayPosition, game, 50, 0.05, 7.5, 0.75);
+function MediumAsteroid(game) {
+    Asteroid.call(this, game, 50, 0.05, 7.5, 0.75);
 };
 
-function LargeAsteroid(arrayPosition, game) {
-    Asteroid.call(this, arrayPosition, game, 20, 0.01, 5, 1.25);
+function LargeAsteroid(game) {
+    Asteroid.call(this, game, 20, 0.01, 5, 1.25);
 };
 
 AsteroidSpawner = function (game) {
@@ -61,13 +60,13 @@ AsteroidSpawner = function (game) {
         var ang = 0
 
         if (i % 4 === 0) {
-            var asteroid = new LargeAsteroid(i, game)
+            var asteroid = new LargeAsteroid(game)
         }
         else if (i % 3 === 0) {
-            var asteroid = new MediumAsteroid(i, game)
+            var asteroid = new MediumAsteroid(game)
         }
         else {
-            var asteroid = new SmallAsteroid(i, game)
+            var asteroid = new SmallAsteroid(game)
         }
         game.asteroidsArray.push(asteroid)
     }
@@ -101,34 +100,3 @@ LargeAsteroid.prototype = Object.create(Asteroid.prototype);
 SmallAsteroid.prototype.constructor = SmallAsteroid;
 MediumAsteroid.prototype.constructor = MediumAsteroid;
 LargeAsteroid.prototype.constructor = LargeAsteroid;
-
-
-generateRandomCoordinatesOnEdge = function () {
-    // Select a random edge of the square (top, bottom, left, or right)
-    const edges = ['top', 'bottom', 'left', 'right'];
-    const edge = edges[Math.floor(Math.random() * edges.length)];
-
-    // Generate random coordinates on the selected edge
-    let x, y;
-    switch (edge) {
-        case 'top':
-            x = (Math.random() * 28.8 - 14.4).toFixed(1);
-            y = 6.9;
-            break;
-        case 'bottom':
-            x = (Math.random() * 28.8 - 14.4).toFixed(1);
-            y = -6.9;
-            break;
-        case 'left':
-            x = -14.4;
-            y = (Math.random() * 13.8 - 6.9).toFixed(1);
-            break;
-        case 'right':
-            x = 14.4;
-            y = (Math.random() * 13.8 - 6.9).toFixed(1);
-            break;
-    }
-    x = parseFloat(x)
-    y = parseFloat(y)
-    return { x, y };
-}

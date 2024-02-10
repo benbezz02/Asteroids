@@ -24,12 +24,6 @@ var animateModernGame = function (gl, canvas) {
 
   //Game Set UP
   // setbackground(game, '/Asteroids/assets/Space.png')
-  // var saucer = new Saucer(game, 100)
-  //  var ast = new LargeAsteroid(game)
-
-  //var saucerNode = scene.addNode(lightNode, saucer.model, "saucerNode", Node.NODE_TYPE.MODEL);
-  //nodesArray.push(saucerNode)
-  //Mat4x4.makeTranslation(saucerNode.transform, [-5, 0, 0]);
 
   // Set up animation
 
@@ -49,6 +43,9 @@ var animateModernGame = function (gl, canvas) {
   scene.setViewFrustum(1, 100, 0.5236);
 
   var spacebarCounter = 0
+
+  // Start timers
+  game.SaucerSpawnChecker();
 
   var animate = function () {
     game.runAllChecks()

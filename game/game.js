@@ -28,8 +28,6 @@ function Game(gl, scene) {
 Game.prototype.runAllChecks = function () {
     this.AsteroidCollisionChecker()
     this.AsteroidSpawnerChecker()
-
-    // this.SaucerSpawnChecker()
 }
 
 Game.prototype.EdgeChecker = function () {
@@ -79,11 +77,6 @@ Game.prototype.EdgeChecker = function () {
     }
 
     for (var saucer of this.saucersArray) {
-        saucer.saucerNode.transform[12] = updateTransformOnEdge(
-            saucer.saucerNode.transform[12],
-            width,
-        );
-
         saucer.saucerNode.transform[13] = updateTransformOnEdge(
             saucer.saucerNode.transform[13],
             height,
@@ -99,16 +92,9 @@ Game.prototype.AsteroidSpawnerChecker = function () {
 }
 
 Game.prototype.SaucerSpawnChecker = function () {
-    console.log(Math.round((this.gameTime / 1000)))
-    if (Math.round((this.gameTime / 1000)) % 10 === 0) {
-        if (SaucerSpawner() === true) {
-            if (this.player.points < 10000) {
-                this.saucersArray.push(new SmallSaucer(this))
-            } else {
-                this.saucersArray.push(new LargeSaucer(this))
-            }
-        }
-    }
+    var timerInterval = setInterval(() => {
+        SaucerSpawner(this)
+    }, 10000);
 }
 
 Game.prototype.AsteroidCollisionChecker = function () {
@@ -116,23 +102,20 @@ Game.prototype.AsteroidCollisionChecker = function () {
         for (let j = 0; j < this.player.lasersArray.length; j++) {
             let distanceX = Math.abs(this.asteroidsArray[i].asteroidNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12]);
             let distanceY = Math.abs(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13]);
-            let distanceZ = Math.abs(this.asteroidsArray[i].asteroidNode.transform[14] - this.player.lasersArray[j].laserNode.transform[14]);
 
-            // Check for collision in each dimension
-            if (distanceX > (0.1 + this.asteroidsArray[i].radius)) {
-                continue;
-            }
-            else if (distanceY > (0.1 + this.asteroidsArray[i].radius)) {
-                continue;
-            }
-            else if (distanceZ > (0.1 + this.asteroidsArray[i].radius)) {
-                continue;
-            }
-            else {
-                this.asteroidsArray.splice(i, 1)
-                this.player.lasersArray.splice(j, 1)
-                i--
-                j--
+            // Check for collision in each dimension 
+            if (distanceX <= (0.15 + this.asteroidsArray[i].radius) ||
+                distanceY <= (0.15 + this.asteroidsArray[i].radius)) {
+
+                this.asteroidsArray.splice(i, 1);
+                this.player.lasersArray.splice(j, 1);
+
+                i--;
+                j--;
+
+                console.log(distanceX)
+                console.log(distanceY)
+                console.log(this.asteroidsArray.length)
             }
         }
     }
