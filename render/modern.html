@@ -7,52 +7,12 @@
 
     <style>
         body {
-            margin: 0;
             background-color: #000;
             color: #fff;
             font-family: 'Press Start 2P', cursive;
-            text-align: center;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             height: 100vh;
-        }
-
-        .menu {
-            background-color: #000;
-            padding: 20px;
-            border: 2px solid #fff;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            background-color: #fff;
-            color: #000;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            margin: 5px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #555;
-        }
-
-        .table-container {
-            background-color: #000;
-            padding: 20px;
-            border: 2px solid #fff;
-            border-radius: 10px;
         }
 
         h2 {
@@ -60,19 +20,13 @@
             margin-bottom: 20px;
         }
 
-        .scoreboard {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .scoreboard th,
-        .scoreboard td {
-            border: 1px solid #fff;
-            padding: 8px;
-        }
-
-        .scoreboard th {
-            background-color: #555;
+        #data {
+          position: relative;
+          top: 10px;
+          right: 15px;
+          padding: 8px;
+          z-index: 1;
+          text-align: right;
         }
     </style>
 
@@ -245,8 +199,12 @@
 </head>
 
 <body style='margin:0px' onload='start(); start_game_modern()'>
-    <canvas id='canvas-modern' style='position: absolute; background-color: black;'>
+    <canvas id='canvas-modern' style='background-color: black;'>
     </canvas>
+    <div id="data">
+      <h2 id="wave"></h2>
+      <h2 id="score"></h2>
+    </div>
 </body>
 
 </html>

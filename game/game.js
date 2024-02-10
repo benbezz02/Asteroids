@@ -2,9 +2,6 @@ function Game(gl, scene) {
     this.gl = gl
     this.scene = scene
 
-    this.gameSeconds = 0;
-    this.gameTime = 0;
-
     // Set up lights
     var light = new Light();
     light.type = Light.LIGHT_TYPE.DIRECTIONAL;
@@ -30,6 +27,7 @@ Game.prototype.runAllChecks = function () {
     this.AsteroidCollisionChecker()
     this.AsteroidSpawnerChecker()
     this.LivesChecker()
+    this.ScoreWaveChecker()
 }
 
 Game.prototype.EdgeChecker = function () {
@@ -139,4 +137,10 @@ Game.prototype.LivesChecker = function () {
         this.livesArray.push(heart)
     }
 
+}
+
+Game.prototype.ScoreWaveChecker = function () {
+
+    document.getElementById('wave').innerText = ("Wave " + this.wave);
+    document.getElementById('score').innerText = this.player.score;
 }

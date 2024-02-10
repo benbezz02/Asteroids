@@ -26,8 +26,6 @@ var animateModernGame = function (gl, canvas) {
   // setbackground(game, '/Asteroids/assets/Space.png')
 
   // Set up animation
-
-  var theta = 0;
   var lightTransform = Mat4x4.create();
   var modelTransform = Mat4x4.create();
   var viewTransform = Mat4x4.create();
