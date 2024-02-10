@@ -20,6 +20,7 @@ function Game(gl, scene) {
 
     this.wave = 0
     this.player = new Player(this)
+    this.livesArray = new Array()
 
     this.asteroidsArray = new Array()
     this.saucersArray = new Array()
@@ -28,6 +29,7 @@ function Game(gl, scene) {
 Game.prototype.runAllChecks = function () {
     this.AsteroidCollisionChecker()
     this.AsteroidSpawnerChecker()
+    this.LivesChecker()
 }
 
 Game.prototype.EdgeChecker = function () {
@@ -100,23 +102,41 @@ Game.prototype.SaucerSpawnChecker = function () {
 Game.prototype.AsteroidCollisionChecker = function () {
     for (let i = 0; i < this.asteroidsArray.length; i++) {
         for (let j = 0; j < this.player.lasersArray.length; j++) {
-            let distanceX = Math.abs(this.asteroidsArray[i].asteroidNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12]);
-            let distanceY = Math.abs(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13]);
+            let distanceX = Math.pow(this.asteroidsArray[i].asteroidNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
+            let distanceY = Math.pow(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
+            let distance = Math.sqrt(distanceX + distanceY)
 
-            // Check for collision in each dimension 
-            if (distanceX <= (0.15 + this.asteroidsArray[i].radius) ||
-                distanceY <= (0.15 + this.asteroidsArray[i].radius)) {
+            if (distance <= (0.145 + this.asteroidsArray[i].radius)) {
 
                 this.asteroidsArray.splice(i, 1);
-                this.player.lasersArray.splice(j, 1);
-
                 i--;
-                j--;
 
-                console.log(distanceX)
-                console.log(distanceY)
                 console.log(this.asteroidsArray.length)
             }
         }
     }
+}
+
+Game.prototype.LivesChecker = function () {
+    if (this.player.lives <= 0) {
+        window.location.href = '/Asteroids/gameover/over.html';
+        return
+    }
+
+    if (this.livesArray.length === 0) {
+        for (let i = 1; i <= this.player.lives; i++) {
+            var heart = addHeart(this);
+            matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + (i * 0.6), 5, 3]);
+            this.livesArray.push(heart)
+        }
+    }
+
+    if (this.player.lives < this.livesArray) {
+        this.livesArray.pop()
+    } else if (this.player.lives > this.livesArray) {
+        var heart = addHeart(this);
+        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lives + 1) * 0.6), 5, 3]);
+        this.livesArray.push(heart)
+    }
+
 }
