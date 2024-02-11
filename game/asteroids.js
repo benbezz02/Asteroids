@@ -96,21 +96,20 @@ AsteroidSpawner = function (game) {
 AsteroidDestroyer = function (game, asteroid) {
     var Mat4x4 = matrixHelper.matrix4;
 
-    x = asteroid.asteroidNode.transform[12] + 0.005
-    y = asteroid.asteroidNode.transform[13] + 0.005
+    game.player.score += asteroid.points
 
-    this.scene.removeNode(asteroid.asteroidNode);
+    x = asteroid.asteroidNode.transform[12]
+    y = asteroid.asteroidNode.transform[13]
+
+    game.scene.removeNode(asteroid.asteroidNode);
 
     if (asteroid instanceof LargeAsteroid) {
         var asteroid1 = new MediumAsteroid(game)
         var asteroid2 = new MediumAsteroid(game)
-        game.player.score += asteroid.points
     } else if (asteroid instanceof MediumAsteroid) {
         var asteroid1 = new SmallAsteroid(game)
         var asteroid2 = new SmallAsteroid(game)
-        game.player.score += asteroid.points
     } else if (asteroid instanceof SmallAsteroid) {
-        game.player.score += asteroid.points
         return;
     }
 

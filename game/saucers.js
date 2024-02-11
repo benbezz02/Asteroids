@@ -7,7 +7,7 @@ function Saucer(game, points, speed) {
     this.saucerNode.speed = speed;
     this.saucerNode.angle = 0.5;
 
-    this.ShootCheck(game)
+    this.shootTimer = this.ShootCheck(game)
 };
 
 Saucer.prototype.createSaucer = function (game) {
@@ -87,10 +87,12 @@ Saucer.prototype.ShootCheck = function (game) {
             this.lasersArray.push(laser)
         }
     }, 2000);
+
+    return timerInterval
 }
 
 function SmallSaucer(game) {
-    Saucer.call(this, game, 1000, 0.03);
+    Saucer.call(this, game, 1000, 0.04);
 };
 
 function LargeSaucer(game) {
@@ -125,6 +127,14 @@ SaucerSpawner = function (game) {
         this.transform[13] = y;
     }
     game.saucersArray.push(saucer)
+}
+
+SaucerDestroyer = function (game, saucer) {
+    game.player.score += saucer.points
+
+    clearInterval(saucer.shootTimer)
+
+    game.scene.removeNode(saucer.saucerNode);
 }
 
 SmallSaucer.prototype = Object.create(Saucer.prototype);

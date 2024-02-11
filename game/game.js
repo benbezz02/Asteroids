@@ -26,6 +26,7 @@ function Game(gl, scene) {
 
 Game.prototype.runAllChecks = function () {
     this.AsteroidCollisionChecker()
+    this.SaucerCollisionChecker()
     this.PlayerCollisionChecker()
     this.AsteroidSpawnerChecker()
     this.LivesChecker()
@@ -110,7 +111,7 @@ Game.prototype.AsteroidSpawnerChecker = function () {
 Game.prototype.SaucerSpawnChecker = function () {
     var timerInterval = setInterval(() => {
         SaucerSpawner(this)
-    }, 5000);
+    }, 10000);
 }
 
 Game.prototype.PlayerCollisionChecker = function () {
@@ -127,7 +128,6 @@ Game.prototype.PlayerCollisionChecker = function () {
         }
     }
 
-    /*
     for (let i = 0; i < this.saucersArray.length; i++) {
         let distanceX = Math.pow(this.saucersArray[i].saucerNode.transform[12] - this.player.shipNode.transform[12], 2);
         let distanceY = Math.pow(this.saucersArray[i].saucerNode.transform[13] - this.player.shipNode.transform[13], 2);
@@ -135,25 +135,28 @@ Game.prototype.PlayerCollisionChecker = function () {
 
         if ((distance <= (0.7 + 0.5)) && (this.player.isHittable === true)) {
             this.player.getsHit();
-            this.scene.removeNode(this.saucersArray[i].saucerNode);
+            SaucerDestroyer(this, this.saucersArray[i]);
             this.saucersArray.splice(i, 1);
             i--;
         }
 
-        for (let j = 0; j < this.saucersArray[i].lasersArray.length; j++) {
-            let distanceX = Math.pow(this.saucersArray[i].lasersArray[j].laserNode.transform[12] - this.player.shipNode.transform[12], 2);
-            let distanceY = Math.pow(this.saucersArray[i].lasersArray[j].laserNode.transform[13] - this.player.shipNode.transform[13], 2);
-            let distance = Math.sqrt(distanceX + distanceY)
+        let saucer = this.saucersArray[i]
 
-            if ((distance <= (0.7 + 0.141)) && (this.player.isHittable === true)) {
+        for (let j = 0; j < saucer.lasersArray.length; j++) {
+            let DistanceX = Math.pow(saucer.lasersArray[j].laserNode.transform[12] - this.player.shipNode.transform[12], 2);
+            let DistanceY = Math.pow(saucer.lasersArray[j].laserNode.transform[13] - this.player.shipNode.transform[13], 2);
+            let Distance = Math.sqrt(DistanceX + DistanceY)
+
+            if ((Distance <= (0.7 + 0.141)) && (this.player.isHittable === true)) {
                 this.player.getsHit();
+                this.player.score += this.saucersArray[i].points;
                 this.scene.removeNode(this.saucersArray[i].lasersArray[j].laserNode);
                 this.saucersArray[i].lasersArray.splice(j, 1);
                 i--;
             }
         }
-        
-    }*/
+
+    }
 }
 
 Game.prototype.AsteroidCollisionChecker = function () {
@@ -173,6 +176,26 @@ Game.prototype.AsteroidCollisionChecker = function () {
                 if (i != (this.asteroidsArray.length - 1)) { i--; }
 
                 AsteroidDestroyer(this, asteroid);
+            }
+        }
+    }
+}
+
+Game.prototype.SaucerCollisionChecker = function () {
+    for (let i = 0; i < this.saucersArray.length; i++) {
+        for (let j = 0; j < this.player.lasersArray.length; j++) {
+            let distanceX = Math.pow(this.saucersArray[i].saucerNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
+            let distanceY = Math.pow(this.saucersArray[i].saucerNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
+            let distance = Math.sqrt(distanceX + distanceY)
+
+            if (distance <= (0.5 + 0.141)) {
+                this.scene.removeNode(this.player.lasersArray[j].laserNode);
+                this.player.lasersArray.splice(j, 1);
+                j--;
+
+                SaucerDestroyer(this, this.saucersArray[i]);
+                this.saucersArray.splice(i, 1);
+                i--;
             }
         }
     }
@@ -200,7 +223,7 @@ Game.prototype.LivesChecker = function () {
         this.lifesArray.pop()
     } else if (this.player.lifes > this.lifesArray.length) {
         var heart = addHeart(this);
-        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lifes + 1) * 0.6), 5, 3]);
+        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lifes) * 0.6), 5, 3]);
         this.lifesArray.push(heart)
     }
 
