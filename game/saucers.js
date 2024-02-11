@@ -1,15 +1,19 @@
 function Saucer(game, points, speed) {
     this.points = points;
 
+    this.lasersArray = new Array()
+
     this.saucerNode = this.createSaucer(game);
     this.saucerNode.speed = speed;
     this.saucerNode.angle = 0.5;
+
+    this.ShootCheck(game)
 };
 
 Saucer.prototype.createSaucer = function (game) {
 
     var quad = makeQuad(
-        [[-0.45, -0.45, 0], [0.45, -0.45, 0], [0.45, 0.45, 0], [-0.45, 0.45, 0]],
+        [[-0.4, -0.4, 0], [0.4, -0.4, 0], [0.4, 0.4, 0], [-0.4, 0.4, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);
@@ -23,8 +27,12 @@ Saucer.prototype.createSaucer = function (game) {
     var material = new Material();
 
     const saucerImage = new Image();
-    saucerImage.src = '/Asteroids/assets/Pack2/UFOs/Beholder/Beholder.png';
-    NewAsset();
+    if (this instanceof LargeSaucer) {
+        saucerImage.src = '/Asteroids/assets/Pack2/UFOs/Beholder/Beholder.png';
+    } else if (this instanceof SmallSaucer) {
+        saucerImage.src = '/Asteroids/assets/Pack2/UFOs/Emissary/Emissary.png';
+    }
+    NewAsset()
 
     saucerImage.onload = () => {
         material.setAlbedo(game.gl, saucerImage);
@@ -42,27 +50,43 @@ Saucer.prototype.createSaucer = function (game) {
     return game.scene.addNode(game.lightNode, model, "saucerNode", Node.NODE_TYPE.MODEL);
 }
 
-Saucer.prototype.Shoot = function () {
-    numSuccess = 0
-    numFailure = 0
+Saucer.prototype.ShootCheck = function (game) {
+    var timerInterval = setInterval(() => {
+        if (BernoulliTrial()) {
+            if (this instanceof SmallSaucer) {
+                var deltaY = game.player.shipNode.transform[13] - this.saucerNode.transform[13];
+                var deltaX = game.player.shipNode.transform[12] - this.saucerNode.transform[12];
 
-    for (let i = 0; i < 25; i++) {
-        var randomNum = Math.random();
+                var angle = Math.atan2(deltaY, deltaX)
+                var laser = new Projectile(game, angle)
+            }
+            if (this instanceof LargeSaucer) {
+                var angle = Math.random() * 360
+                var laser = new Projectile(game, angle)
+            }
 
-        if (randomNum > 0.5) {
-            numSuccess++;
+            laser.laserNode.transform[12] = this.saucerNode.transform[12]
+            laser.laserNode.transform[13] = this.saucerNode.transform[13]
+
+            var Mat4x4 = matrixHelper.matrix4;
+
+            var zTransform = Mat4x4.create();
+            Mat4x4.makeRotationZ(zTransform, angle);
+
+            var copy = Mat4x4.clone(laser.laserNode.transform);
+            Mat4x4.multiply(laser.laserNode.transform, copy, zTransform);
+
+            laser.laserNode.animationCallback = function () {
+                x = this.transform[12] + (this.speed * Math.cos(angle))
+                y = this.transform[13] + (this.speed * Math.sin(angle))
+
+                this.transform[12] = x;
+                this.transform[13] = y;
+            };
+
+            this.lasersArray.push(laser)
         }
-        else {
-            numFailure++;
-        }
-    }
-
-    if (numSuccess > numFailure) {
-        return true
-    }
-    else {
-        return false
-    }
+    }, 2000);
 }
 
 function SmallSaucer(game) {
@@ -80,7 +104,7 @@ SaucerSpawner = function (game) {
         return
     }
 
-    if (game.player.points <= 10000) {
+    if (game.player.score <= 10000) {
         var saucer = new LargeSaucer(game)
     } else {
         var saucer = new SmallSaucer(game)

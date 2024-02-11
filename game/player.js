@@ -7,7 +7,6 @@ function Player(game) {
     this.score = 0
 
     this.lasersArray = new Array()
-    this.laserCounter = 0
 
     this.shipNode = this.createShip(game);
     this.shipNode.speed = 0;

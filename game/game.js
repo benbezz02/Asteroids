@@ -85,6 +85,18 @@ Game.prototype.EdgeChecker = function () {
             saucer.saucerNode.transform[13],
             height,
         );
+
+        for (let i = 0; i < saucer.lasersArray.length; i++) {
+            if (saucer.lasersArray[i].laserNode.transform[12] >= width || saucer.lasersArray[i].laserNode.transform[12] <= -width) {
+                this.scene.removeNode(saucer.lasersArray[i].laserNode);
+                saucer.lasersArray.splice(i, 1)
+                i--
+            } else if (saucer.lasersArray[i].laserNode.transform[13] >= height || saucer.lasersArray[i].laserNode.transform[13] <= -height) {
+                this.scene.removeNode(saucer.lasersArray[i].laserNode);
+                saucer.lasersArray.splice(i, 1)
+                i--
+            }
+        }
     }
 }
 
@@ -98,7 +110,7 @@ Game.prototype.AsteroidSpawnerChecker = function () {
 Game.prototype.SaucerSpawnChecker = function () {
     var timerInterval = setInterval(() => {
         SaucerSpawner(this)
-    }, 10000);
+    }, 5000);
 }
 
 Game.prototype.PlayerCollisionChecker = function () {
@@ -113,8 +125,35 @@ Game.prototype.PlayerCollisionChecker = function () {
             this.asteroidsArray.splice(i, 1);
             i--;
         }
-
     }
+
+    /*
+    for (let i = 0; i < this.saucersArray.length; i++) {
+        let distanceX = Math.pow(this.saucersArray[i].saucerNode.transform[12] - this.player.shipNode.transform[12], 2);
+        let distanceY = Math.pow(this.saucersArray[i].saucerNode.transform[13] - this.player.shipNode.transform[13], 2);
+        let distance = Math.sqrt(distanceX + distanceY)
+
+        if ((distance <= (0.7 + 0.5)) && (this.player.isHittable === true)) {
+            this.player.getsHit();
+            this.scene.removeNode(this.saucersArray[i].saucerNode);
+            this.saucersArray.splice(i, 1);
+            i--;
+        }
+
+        for (let j = 0; j < this.saucersArray[i].lasersArray.length; j++) {
+            let distanceX = Math.pow(this.saucersArray[i].lasersArray[j].laserNode.transform[12] - this.player.shipNode.transform[12], 2);
+            let distanceY = Math.pow(this.saucersArray[i].lasersArray[j].laserNode.transform[13] - this.player.shipNode.transform[13], 2);
+            let distance = Math.sqrt(distanceX + distanceY)
+
+            if ((distance <= (0.7 + 0.141)) && (this.player.isHittable === true)) {
+                this.player.getsHit();
+                this.scene.removeNode(this.saucersArray[i].lasersArray[j].laserNode);
+                this.saucersArray[i].lasersArray.splice(j, 1);
+                i--;
+            }
+        }
+        
+    }*/
 }
 
 Game.prototype.AsteroidCollisionChecker = function () {
@@ -168,7 +207,6 @@ Game.prototype.LivesChecker = function () {
 }
 
 Game.prototype.ScoreWaveChecker = function () {
-
     document.getElementById('wave').innerText = ("Wave " + this.wave);
     document.getElementById('score').innerText = this.player.score;
 }
