@@ -17,6 +17,7 @@ function Game(gl, scene) {
 
     this.wave = 0
     this.player = new Player(this)
+    this.player.createAnimation()
     this.lifesArray = new Array()
 
     this.asteroidsArray = new Array()
@@ -130,7 +131,7 @@ Game.prototype.AsteroidCollisionChecker = function () {
 
                 var asteroid = this.asteroidsArray[i];
                 this.asteroidsArray.splice(i, 1);
-                i--;
+                if (i != (this.asteroidsArray.length - 1)) { i--; }
 
                 AsteroidDestroyer(this, asteroid);
             }
@@ -148,10 +149,7 @@ Game.prototype.LivesChecker = function () {
         for (let i = 1; i <= this.player.lifes; i++) {
             var heart = addHeart(this);
             matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + (i * 0.6), 5, 3]);
-            console.log(heart.name)
             this.lifesArray.push(heart)
-            var heart1 = this.lifesArray[this.lifesArray.length - 1];
-            console.log(heart1.transform[12])
         }
     }
 

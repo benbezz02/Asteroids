@@ -10,7 +10,9 @@ function Node() {
 
 	this.speed = null;
 	this.angle = null;
+	this.currentAngle = null;
 	this.rotationalSpeed = null;
+
 
 	// Create transform for node (= I)
 	this.transform = matrixHelper.matrix4.create();

@@ -96,8 +96,8 @@ AsteroidSpawner = function (game) {
 AsteroidDestroyer = function (game, asteroid) {
     var Mat4x4 = matrixHelper.matrix4;
 
-    x = asteroid.asteroidNode.transform[12]
-    y = asteroid.asteroidNode.transform[13]
+    x = asteroid.asteroidNode.transform[12] + 0.005
+    y = asteroid.asteroidNode.transform[13] + 0.005
 
     this.scene.removeNode(asteroid.asteroidNode);
 

@@ -51,11 +51,13 @@ var animateModernGame = function (gl, canvas) {
     if (assetsCounter == assetsLoaded) {
 
       window.addEventListener('keydown', function (event) {
-        spacebarCounter += 1
+        spacebarCounter++
         game.player.checkForMovement(event, game, spacebarCounter);
       });
-
-      spacebarCounter = 0
+      window.addEventListener('keyup', function (event) {
+        spacebarCounter = 0
+        game.player.cancelMovement(event);
+      });
 
       scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
 
