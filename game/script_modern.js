@@ -23,7 +23,7 @@ var animateModernGame = function (gl, canvas) {
   var game = new Game(gl, scene);
 
   //Game Set UP
-  // setbackground(game, '/Asteroids/assets/Space.png')
+  // setbackground(game, '/Asteroids/assets/Pack2/nebula.jpg')
 
   // Set up animation
   var lightTransform = Mat4x4.create();
@@ -45,19 +45,23 @@ var animateModernGame = function (gl, canvas) {
   // Start timers
   game.SaucerSpawnChecker();
 
+  function handleKeyDown(event) {
+    spacebarCounter++;
+    game.player.checkForMovement(event, game, spacebarCounter);
+  }
+
+  function handleKeyUp(event) {
+    game.player.cancelMovement(event, game);
+  }
+
   var animate = function () {
     if (game.player.lifes > 0) {
       game.runAllChecks()
 
       if (assetsCounter == assetsLoaded) {
 
-        window.addEventListener('keydown', function (event) {
-          spacebarCounter++
-          game.player.checkForMovement(event, game, spacebarCounter);
-        });
-        window.addEventListener('keyup', function (event) {
-          game.player.cancelMovement(event);
-        });
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
         spacebarCounter = 0
 
         scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
@@ -76,6 +80,9 @@ var animateModernGame = function (gl, canvas) {
           scoreboard.push(game.player)
           toggleGameOver(game.player.score);
           over();
+
+          window.removeEventListener('keydown', handleKeyDown);
+          window.removeEventListener('keyup', handleKeyUp);
         }
 
         scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);

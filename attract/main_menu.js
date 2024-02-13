@@ -3,6 +3,8 @@ var start = function () {
 }
 
 var start_game_classic = function () {
+    gameMode = GameModes.CLASSIC;
+
     var canvas = document.getElementById("canvas");
     canvas.style.position = "absolute";
     canvas.style.left = "50%";
@@ -22,6 +24,8 @@ var start_game_classic = function () {
 }
 
 var start_game_modern = function () {
+    gameMode = GameModes.MODERN;
+
     var canvas = document.getElementById("canvas");
     canvas.style.position = "absolute";
     canvas.style.left = "50%";

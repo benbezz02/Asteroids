@@ -9,6 +9,9 @@ function Player(game) {
 
     this.lasersArray = new Array()
 
+    this.shipMaterial = createMaterialShip(game, '/Asteroids/assets/Pack2/Spaceship1(no boost).png')
+    this.shipMaterialBoost = createMaterialShip(game, '/Asteroids/assets/Pack2/Spaceship1.png')
+
     this.shipNode = this.createShip(game);
     this.shipNode.speed = 0;
     this.shipNode.angle = 0;
@@ -29,24 +32,7 @@ Player.prototype.createShip = function (game) {
     model.vertex = quad.vertex;
     model.compile(game.scene);
 
-    var material = new Material();
-
-    const shipImage = new Image();
-    shipImage.src = '/Asteroids/assets/Pack2/Spaceship1.png';
-    NewAsset();
-
-    shipImage.onload = () => {
-        material.setAlbedo(game.gl, shipImage);
-        AssetsLoaded();
-    };
-
-    material.setDiffuse([1, 1, 1]);
-    material.setShininess(8.0);
-    material.setSpecular([1, 1, 1]);
-    material.setAmbient([0.2, 0.2, 0.2]);
-    material.bind(game.gl, game.scene.shaderProgram);
-
-    model.material = material;
+    model.material = this.shipMaterial;
     return game.scene.addNode(game.lightNode, model, "shipNode", Node.NODE_TYPE.MODEL);
 }
 
@@ -91,6 +77,7 @@ Player.prototype.checkForMovement = function (event, game, spacebarCounter) {
         case 38:
         case 87: {
             this.shipNode.speed = 0.05
+            this.shipNode.nodeObject.material = this.shipMaterialBoost;
             break;
         }
         // Left Arrow or A
@@ -135,11 +122,12 @@ Player.prototype.fireProjectile = function (game) {
     this.lasersArray.push(laser)
 }
 
-Player.prototype.cancelMovement = function (event) {
+Player.prototype.cancelMovement = function (event, game) {
     switch (event.keyCode) {
         case 38:
         case 87: {
             this.shipNode.speed = 0
+            this.shipNode.nodeObject.material = this.shipMaterial;
             break;
         }
         // Left Arrow or A
@@ -186,4 +174,25 @@ Player.prototype.checkAdditionalLife = function () {
 Player.prototype.hyperspaceJump = function () {
     this.shipNode.transform[12] = (Math.random() * 28.8 - 14.4).toFixed(1);
     this.shipNode.transform[13] = (Math.random() * 13.8 - 6.9).toFixed(1);
+}
+
+var createMaterialShip = function (game, imagePath) {
+    var material = new Material();
+
+    const shipImage = new Image();
+    shipImage.src = imagePath;
+    NewAsset();
+
+    shipImage.onload = () => {
+        material.setAlbedo(game.gl, shipImage);
+        AssetsLoaded();
+    };
+
+    material.setDiffuse([1, 1, 1]);
+    material.setShininess(8.0);
+    material.setSpecular([1, 1, 1]);
+    material.setAmbient([0.2, 0.2, 0.2]);
+    material.bind(game.gl, game.scene.shaderProgram);
+
+    return material
 }
