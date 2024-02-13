@@ -19,7 +19,6 @@ var setbackground = function (game, imagePath) {
 
     backgroundImage.onload = () => {
         material.setAlbedo(game.gl, backgroundImage);
-        console.log("Background Loaded");
         AssetsLoaded();
     };
 
@@ -56,7 +55,6 @@ var addHeart = function (game) {
 
     heartImage.onload = () => {
         material.setAlbedo(game.gl, heartImage);
-        console.log("Heart Loaded");
         AssetsLoaded();
     };
 

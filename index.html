@@ -4,85 +4,175 @@
 <head>
   <meta charset='utf-8' />
   <title>Asteroids</title>
+  <link rel="stylesheet" href="style.css">
 
-  <style>
-    body {
-      margin: 0;
-      background-color: #000;
-      color: #fff;
-      font-family: 'Press Start 2P', cursive;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+  <!-- Vertex Shader script in GLSL -->
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    attribute vec3 position;
+    attribute vec3 normal;
+    attribute vec3 color;
+    attribute vec2 texcoords;
 
-    .menu {
-      background-color: #000;
-      padding: 20px;
-      border: 2px solid #fff;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
+    varying vec3 vColor;
+    varying vec3 vNormal;
+    varying vec3 vEye;
+    varying vec3 vLight;
+    varying vec3 vLightAxis;
+    varying vec3 vLightWorld;
+    varying vec2 vTexCoords;
 
-    h1 {
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
+    uniform mat4 viewMatrix;
+    uniform mat4 modelMatrix;
+    uniform mat4 projectionMatrix;
 
-    a {
-      color: #000;
-    }
+    struct LightVertexInfo {
+      vec3 position;
+      vec3 direction;
+      int type;
+    };
 
-    button {
-      background-color: #fff;
-      color: #000;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      margin: 5px;
-      transition: background-color 0.3s;
-    }
+    uniform LightVertexInfo LightVertex[4];
 
-    button:hover {
-      background-color: #555;
-    }
+    void main(void) 
+    {
+      vec4 p = vec4(position, 1.0);
+      mat4 vm = viewMatrix * modelMatrix;
+      mat4 pvm = projectionMatrix * vm;
 
-    .hidden {
-      display: none;
-    }
+      // Light Type : DIRECTIONAL
+      if (LightVertex[0].type == 0) 
+      {
+        vLight = -normalize((viewMatrix * vec4(LightVertex[0].direction, 0)).xyz);
+      } 
+      // Light Type : POINT && SPOT
+      else if (LightVertex[0].type == 1 || LightVertex[0].type == 2) 
+      {
+        vec4 mp = modelMatrix * p;
+        vec4 lt = vec4(LightVertex[0].position, 1.0) - mp;
+        vLight = normalize(viewMatrix * lt).xyz;
+        vLightAxis = normalize(viewMatrix * vec4(LightVertex[0].direction, 0.0)).xyz;
+        vLightWorld = lt.xyz;
+      }
 
-    .table-container {
-      background-color: #000;
-      padding: 20px;
-      border: 2px solid #fff;
-      border-radius: 10px;
-    }
+      // Surface normal (We're assuming no scaling)
+      vNormal = normalize((vm * vec4(normal, 0.0)).xyz);
 
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
+      // Eye vector
+      vEye = -normalize(vm * p).xyz;
+      
+      // Texture coordinates
+      vTexCoords = texcoords;
 
-    .scoreboard {
-      width: 100%;
-      border-collapse: collapse;
-    }
+      // Vertex colour
+      vColor = color;
 
-    .scoreboard th,
-    .scoreboard td {
-      border: 1px solid #fff;
-      padding: 8px;
+      // Projected vertex position
+      gl_Position = pvm * p;
     }
+  </script>
 
-    .scoreboard th {
-      background-color: #555;
+  <!-- Fragment Shader script in GLSL -->
+  <script id="fragment-shader" type="x-shader/x-vertex">
+    precision mediump float;
+
+    // Passed from vertex shader
+    varying vec3 vColor;
+    varying vec3 vNormal;
+    varying vec3 vEye;
+    varying vec3 vLight;
+    varying vec3 vLightAxis;
+    varying vec3 vLightWorld;
+    varying vec2 vTexCoords;
+
+    // Material information
+    uniform float uShininess;
+    uniform vec3 uAmbient;
+    uniform vec3 uDiffuse;
+    uniform vec3 uSpecular;
+    uniform sampler2D uTexture_0;
+
+    // Light information structure
+    struct LightFragmentInfo {
+      int type;
+      int attenuation;
+
+      float alpha, beta;
+
+      vec3 ambient;
+      vec3 diffuse;
+      vec3 specular;
+    };
+
+    uniform LightFragmentInfo LightFragment[4];
+
+    float invPi = 0.31830988618;
+    float inv2Pi = 0.15915494309;
+
+    void main(void) 
+    {
+      vec3 vnLight = normalize(vLight);
+      float vLightDistance = length(vLightWorld);
+
+      // Compute attenuation
+      float attenuation = 1.0;
+
+      if (LightFragment[0].type == 1 || LightFragment[0].type == 2) {
+        if (LightFragment[0].attenuation == 1) {
+          attenuation = 1.0 / vLightDistance;
+        } else if (LightFragment[0].attenuation == 2) {
+          attenuation = 1.0 / (vLightDistance * vLightDistance);
+        }
+      }
+
+      if (LightFragment[0].type == 2) 
+      {
+        float coneAngle = dot(vnLight, -normalize(vLightAxis));
+        coneAngle = max(LightFragment[0].beta, min(LightFragment[0].alpha, coneAngle));
+        coneAngle = (coneAngle - LightFragment[0].beta) / (LightFragment[0].alpha - LightFragment[0].beta);
+        attenuation *= coneAngle;
+      }
+    
+      // Compute reflection vector
+      vec3 vReflect = reflect(vnLight, vNormal);
+
+      // Reflectivity of components
+      vec3 ambient = LightFragment[0].ambient * uAmbient;
+      vec3 diffuse = LightFragment[0].diffuse * uDiffuse;
+      vec3 specular = LightFragment[0].specular * uSpecular;
+      vec3 rho = texture2D(uTexture_0, vTexCoords.xy).xyz;
+      
+      // Compute phong specular and lambert diffuse
+      float s = pow(max(dot(vReflect, -vEye), 0.0), uShininess) * (uShininess + 2.0) * inv2Pi;
+      float d = max(dot(vNormal, vnLight), 0.0) * invPi;
+
+      // KB - Color blending has been changed from modulative to additive 
+      //    - Result is saturated to prevent values outside colour valid range
+      //gl_FragColor = vec4(((ambient + d * diffuse + s * specular) * rho * vColor) * attenuation, 1.0);
+      gl_FragColor = vec4(
+        clamp(vColor + ((ambient + diffuse * d + specular * s) * rho * attenuation), vec3(0,0,0), vec3(1,1,1)),
+        1.0
+      );
     }
-  </style>
+  </script>
+
+  
+  <script type="text/javascript" src="statemachine.js"></script>
+  <script type="text/javascript" src="support/make.js"></script>
+  <script type="text/javascript" src="support/matrix.js"></script>
+  <script type="text/javascript" src="support/light.js"></script>
+  <script type="text/javascript" src="support/material.js"></script>
+  <script type="text/javascript" src="support/model.js"></script>
+  <script type="text/javascript" src="support/scene.js"></script>
+  <script type="text/javascript" src="game/player.js"></script>
+  <script type="text/javascript" src="game/projectile.js"></script>
+  <script type="text/javascript" src="game/asteroids.js"></script>
+  <script type="text/javascript" src="game/saucers.js"></script>
+  <script type="text/javascript" src="game/extras.js"></script>
+  <script type="text/javascript" src="game/game.js"></script>
+  <script type="text/javascript" src="game/script_modern.js"></script>
+  <script type="text/javascript" src="game/script_no_player.js"></script>
+  <script type="text/javascript" src="attract/main_menu.js"></script>
+  <script type="text/javascript" src="attract/scoreboard.js"></script>
 
   <script>
     function toggleSelect() {
@@ -99,43 +189,86 @@
       classicButton.classList.toggle('hidden')
       modernButton.classList.toggle('hidden');
     }
+
+    function toggleSelectGO() {
+      var restartButton = document.getElementById('restartButton');
+      var mainmenuButton = document.getElementById('mainmenuButton');
+      var classicButton2 = document.getElementById('classicButton2');
+      var modernButton2 = document.getElementById('modernButton2');
+
+      // Toggle visibility      
+      restartButton.classList.toggle('hidden');
+      mainmenuButton.classList.toggle('hidden');
+      classicButton2.classList.toggle('hidden')
+      modernButton2.classList.toggle('hidden');
+    }
+
+    function toggleMenu() {
+      var menuTable = document.getElementById("menu-table");
+      menuTable.classList.toggle("hidden");
+      console.log(scoreboard)
+      updateScoreboard();
+    }
+
+    function toggleGameOver(score) {
+      var gameover = document.getElementById("game-over");
+      gameover.classList.toggle("hidden");
+      document.getElementById("finalScore").textContent = score;
+    }
+
+    function saveUsername() {
+      var username = document.getElementById("username").value;
+      scoreboard[scoreboard.length-1].name = username
+    }
   </script>
-
-  <div id="imageCollection" style="height:0"></div>
-
-  <script type="text/javascript" src="./statemachine.js"></script>
-  <script type="text/javascript" src="./attract/main_menu.js"></script>
-  <script type="text/javascript" src="./attract/scoreboard.js"></script>
-
 </head>
 
-<body style='margin:0px' onload='start()'>
-  <div class="menu" id="gameMenu">
-    <h1>Asteroids</h1>
-    <h3 id="select" class="hidden">Select Game Mode</h3>
-    <button id="startButton" onclick="toggleSelect()">Start Game</button>
-    <button id="exitButton" onclick="exit()">Exit</button>
-    <a href="./render/classic.html">
-      <button id="classicButton" class="hidden">Classic</button>
-    </a>
-    <a href="./render/modern.html">
-      <button id="modernButton" class="hidden">Modern</button>
-    </a>
+<body style='margin:0px' onload='start(), start_no_player()'>
+  <div id="menu-table" class="active">
+    <div class="menu" id="gameMenu" >
+      <h1>Asteroids</h1>
+      <h3 id="select" class="hidden">Select Game Mode</h3>
+      <button id="startButton" onclick="toggleSelect()">Start Game</button>
+      <button id="exitButton" onclick="exit()">Exit</button>
+      <button id="classicButton" class="hidden" onclick="toggleMenu(), start_game_classic()">Classic</button>
+      <button id="modernButton" class="hidden" onclick="toggleMenu(), start_game_modern()">Modern</button>
+    </div>
+    <div class="table">
+      <h2>High Scores</h2>
+      <div class="table-container">
+      <table class="scoreboard" id="scoreboard">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table body content will be added dynamically using JavaScript -->
+        </tbody>
+      </table>
+      </div>
+    </div>
   </div>
-  <div class="table-container">
-    <h2>High Scores</h2>
-    <table class="scoreboard" id="scoreboard">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Name</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Table body content will be added dynamically using JavaScript -->
-      </tbody>
-    </table>
+  <div id="canvases">
+    <canvas id='canvas' style='background-color: black;'>
+    </canvas>
+    <div id="data">
+      <h2 id="wave"></h2>
+      <h2 id="score"></h2>
+    </div>
+  </div>
+  <div id="game-over" class="hidden">
+    <h1>Game Over</h1>
+    <p>Your Score: <span id="finalScore"></span></p>
+    <label for="username">Enter your name:</label>
+    <input type="text" id="username" maxlength="8">
+    <button onclick="saveUsername()">Save</button>
+    <button id="restartButton" onclick="toggleSelectGO()">Restart</button>
+    <button id="mainmenuButton" onclick="toggleGameOver(), toggleMenu()">Main Menu</button>
+    <button id="classicButton2" class="hidden" onclick="toggleSelectGO(), toggleGameOver(), start_game_classic()">Classic</button>
+    <button id="modernButton2" class="hidden" onclick="toggleSelectGO(), toggleGameOver(), start_game_modern()">Modern</button>
   </div>
 </body>
 

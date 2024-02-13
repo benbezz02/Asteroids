@@ -25,7 +25,6 @@ Projectile.prototype.createProjectile = function (game) {
 
     projectileImage.onload = () => {
         material.setAlbedo(game.gl, projectileImage);
-        console.log("Laser Loaded");
         AssetsLoaded();
     };
 

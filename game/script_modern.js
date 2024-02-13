@@ -46,28 +46,49 @@ var animateModernGame = function (gl, canvas) {
   game.SaucerSpawnChecker();
 
   var animate = function () {
-    game.runAllChecks()
+    if (game.player.lifes > 0) {
+      game.runAllChecks()
 
-    if (assetsCounter == assetsLoaded) {
+      if (assetsCounter == assetsLoaded) {
 
-      window.addEventListener('keydown', function (event) {
-        spacebarCounter++
-        game.player.checkForMovement(event, game, spacebarCounter);
-      });
-      window.addEventListener('keyup', function (event) {
-        game.player.cancelMovement(event);
-      });
-      spacebarCounter = 0
+        window.addEventListener('keydown', function (event) {
+          spacebarCounter++
+          game.player.checkForMovement(event, game, spacebarCounter);
+        });
+        window.addEventListener('keyup', function (event) {
+          game.player.cancelMovement(event);
+        });
+        spacebarCounter = 0
 
-      scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
+        scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
 
-      scene.beginFrame();
-      scene.animate();
-      scene.draw();
-      scene.endFrame();
+        scene.beginFrame();
+        scene.animate();
+        scene.draw();
+        scene.endFrame();
 
-      game.EdgeChecker();
+        game.EdgeChecker();
+      }
+    } else {
+      if (assetsCounter == assetsLoaded) {
+        if (game.player.shipNode.name != null) {
+          game.scene.removeNode(game.player.shipNode)
+          scoreboard.push(game.player)
+          toggleGameOver(game.player.score);
+          over();
+        }
+
+        scene.lookAt(observer, [0, 0, 0], [0, 1, 0]);
+
+        scene.beginFrame();
+        scene.animate();
+        scene.draw();
+        scene.endFrame();
+
+        edgeChecker(game);
+      }
     }
+
     window.requestAnimationFrame(animate);
   };
   // Go!

@@ -202,11 +202,6 @@ Game.prototype.SaucerCollisionChecker = function () {
 }
 
 Game.prototype.LivesChecker = function () {
-    if (this.player.lifes <= 0) {
-        window.location.href = '/Asteroids/gameover/over.html';
-        return
-    }
-
     if (this.lifesArray.length === 0) {
         for (let i = 1; i <= this.player.lifes; i++) {
             var heart = addHeart(this);
@@ -226,7 +221,6 @@ Game.prototype.LivesChecker = function () {
         matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lifes) * 0.6), 5, 3]);
         this.lifesArray.push(heart)
     }
-
 }
 
 Game.prototype.ScoreWaveChecker = function () {

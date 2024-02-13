@@ -1,0 +1,100 @@
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+}
+
+#menu-table,
+#game-over {
+    z-index: 1;
+}
+
+.menu {
+    background-color: #000;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+a {
+    color: #000;
+}
+
+button {
+    background-color: #fff;
+    color: #000;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.hidden {
+    display: none;
+}
+
+.table-container {
+    background-color: #000;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.scoreboard {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.scoreboard th,
+.scoreboard td {
+    border: 1px solid #fff;
+    padding: 8px;
+}
+
+.scoreboard th {
+    background-color: #555;
+}
+
+#data {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    padding: 4px;
+    z-index: 1;
+    text-align: right;
+}
+
+#game-over {
+    background-color: #000;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+}

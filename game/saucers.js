@@ -36,7 +36,6 @@ Saucer.prototype.createSaucer = function (game) {
 
     saucerImage.onload = () => {
         material.setAlbedo(game.gl, saucerImage);
-        console.log("Saucer Loaded");
         AssetsLoaded();
     };
 

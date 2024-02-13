@@ -4,7 +4,7 @@ function Player(game) {
     this.isHittable = true
     this.hypespacejump = true
 
-    this.name = "Joe"
+    this.name = ""
     this.score = 0
 
     this.lasersArray = new Array()
@@ -37,7 +37,6 @@ Player.prototype.createShip = function (game) {
 
     shipImage.onload = () => {
         material.setAlbedo(game.gl, shipImage);
-        console.log("Ship Loaded");
         AssetsLoaded();
     };
 

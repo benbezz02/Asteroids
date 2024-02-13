@@ -26,7 +26,6 @@ Asteroid.prototype.createAsteroid = function (game) {
 
     asteroidImage.onload = () => {
         material.setAlbedo(game.gl, asteroidImage);
-        console.log("Rock Loaded");
         AssetsLoaded();
     };
 

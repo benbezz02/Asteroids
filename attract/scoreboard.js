@@ -1,19 +1,24 @@
 var scoreboard = new Array()
 
-document.addEventListener('DOMContentLoaded', function () {
+updateScoreboard = function () {
     var scoretable = document.getElementById('scoreboard');
 
+    // Sort the scoreboard
     scoreboard.sort(function (a, b) {
-        return b.points - a.points;
+        return b.score - a.score;
     });
 
+    // Clear existing table body
+    var tbody = scoretable.querySelector('tbody');
+    tbody.innerHTML = '';
+
     // Create table body
-    for (var i = 1; i < scoreboard.length; i++) {
+    for (var i = 0; i < scoreboard.length; i++) {
         var player = scoreboard[i];
         var dataRow = document.createElement('tr');
 
         var ranktd = document.createElement('td');
-        ranktd.textContent = i + ".";
+        ranktd.textContent = i + 1 + ".";
         dataRow.appendChild(ranktd);
 
         var nametd = document.createElement('td');
@@ -21,9 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
         dataRow.appendChild(nametd);
 
         var scoretd = document.createElement('td');
-        scoretd.textContent = player.points;
+        scoretd.textContent = player.score;
         dataRow.appendChild(scoretd);
 
-        scoretable.querySelector('tbody').appendChild(dataRow);
+        tbody.appendChild(dataRow);
     }
-});
+};
