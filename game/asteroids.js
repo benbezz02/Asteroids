@@ -40,18 +40,6 @@ Asteroid.prototype.createAsteroid = function (game) {
     return game.scene.addNode(game.lightNode, model, "asteroidNode", Node.NODE_TYPE.MODEL);
 }
 
-function SmallAsteroid(game) {
-    Asteroid.call(this, game, 100, 0.075, 10, 0.4);
-};
-
-function MediumAsteroid(game) {
-    Asteroid.call(this, game, 50, 0.05, 7.5, 0.75);
-};
-
-function LargeAsteroid(game) {
-    Asteroid.call(this, game, 20, 0.01, 5, 1.25);
-};
-
 AsteroidSpawner = function (game) {
     var Mat4x4 = matrixHelper.matrix4;
 
@@ -147,6 +135,18 @@ AsteroidDestroyer = function (game, asteroid) {
     game.asteroidsArray.push(asteroid1)
     game.asteroidsArray.push(asteroid2)
 }
+
+function SmallAsteroid(game) {
+    Asteroid.call(this, game, 100, 0.075, 10, 0.4);
+};
+
+function MediumAsteroid(game) {
+    Asteroid.call(this, game, 50, 0.05, 7.5, 0.75);
+};
+
+function LargeAsteroid(game) {
+    Asteroid.call(this, game, 20, 0.01, 5, 1.25);
+};
 
 SmallAsteroid.prototype = Object.create(Asteroid.prototype);
 MediumAsteroid.prototype = Object.create(Asteroid.prototype);

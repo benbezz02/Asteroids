@@ -91,14 +91,6 @@ Saucer.prototype.ShootCheck = function (game) {
     return timerInterval
 }
 
-function SmallSaucer(game) {
-    Saucer.call(this, game, 1000, 0.04);
-};
-
-function LargeSaucer(game) {
-    Saucer.call(this, game, 200, 0.01);
-};
-
 SaucerSpawner = function (game) {
     var randomNum = Math.random();
 
@@ -136,6 +128,14 @@ SaucerDestroyer = function (game, saucer) {
 
     game.scene.removeNode(saucer.saucerNode);
 }
+
+function SmallSaucer(game) {
+    Saucer.call(this, game, 1000, 0.04);
+};
+
+function LargeSaucer(game) {
+    Saucer.call(this, game, 200, 0.01);
+};
 
 SmallSaucer.prototype = Object.create(Saucer.prototype);
 LargeSaucer.prototype = Object.create(Saucer.prototype);

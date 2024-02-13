@@ -2,6 +2,7 @@ function Player(game) {
     this.lifes = 3
     this.numAdditionaLifes = 0
     this.isHittable = true
+    this.hypespacejump = true
 
     this.name = "Joe"
     this.score = 0
@@ -161,8 +162,15 @@ Player.prototype.cancelMovement = function (event) {
 }
 
 Player.prototype.getsHit = function () {
+    if (this.lifes === 1 && this.hypespacejump) {
+        this.hyperspaceJump()
+        this.hypespacejump = false;
+        return
+    }
+
     this.lifes--
     this.isHittable = false;
+
     setTimeout(() => {
         this.isHittable = true;
     }, 1000);
@@ -170,8 +178,13 @@ Player.prototype.getsHit = function () {
 
 Player.prototype.checkAdditionalLife = function () {
 
-    if ((Math.floor(this.score / 1000)) > this.numAdditionaLifes) {
+    if ((Math.floor(this.score / 10000)) > this.numAdditionaLifes) {
         this.lifes++
         this.numAdditionaLifes++
     }
+}
+
+Player.prototype.hyperspaceJump = function () {
+    this.shipNode.transform[12] = (Math.random() * 28.8 - 14.4).toFixed(1);
+    this.shipNode.transform[13] = (Math.random() * 13.8 - 6.9).toFixed(1);
 }
