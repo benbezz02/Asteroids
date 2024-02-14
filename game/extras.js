@@ -68,7 +68,41 @@ var addHeart = function (game) {
     return game.scene.addNode(game.lightNode, model, "heartNode", Node.NODE_TYPE.MODEL);
 }
 
-generateRandomCoordinatesOnEdge = function (customEdges) {
+var makeExplosion = function (game, node) {
+    node.nodeObject.material = game.explosion1;
+    setTimeout(function () {
+        node.nodeObject.material = game.explosio21;
+    }, 200);
+    setTimeout(function () {
+        node.nodeObject.material = game.explosion3;
+    }, 500);
+    setTimeout(function () {
+        game.scene.removeNode(node);
+    }, 700);
+}
+
+var createMaterialExplosion = function (game, imagePath) {
+    var material = new Material();
+
+    const shipImage = new Image();
+    shipImage.src = imagePath;
+    NewAsset();
+
+    shipImage.onload = () => {
+        material.setAlbedo(game.gl, shipImage);
+        AssetsLoaded();
+    };
+
+    material.setDiffuse([1, 1, 1]);
+    material.setShininess(8.0);
+    material.setSpecular([1, 1, 1]);
+    material.setAmbient([0.2, 0.2, 0.2]);
+    material.bind(game.gl, game.scene.shaderProgram);
+
+    return material
+}
+
+var generateRandomCoordinatesOnEdge = function (customEdges) {
     // Select a random edge of the square (top, bottom, left, or right)
     const edges = customEdges || ['top', 'bottom', 'left', 'right'];
     const edge = edges[Math.floor(Math.random() * edges.length)];
@@ -98,7 +132,7 @@ generateRandomCoordinatesOnEdge = function (customEdges) {
     return { x, y };
 }
 
-BernoulliTrial = function () {
+var BernoulliTrial = function () {
     numSuccess = 0
     numFailure = 0
 

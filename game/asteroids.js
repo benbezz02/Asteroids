@@ -88,6 +88,7 @@ AsteroidDestroyer = function (game, asteroid) {
     x = asteroid.asteroidNode.transform[12]
     y = asteroid.asteroidNode.transform[13]
 
+    //makeExplosion(game, asteroid.asteroidNode)
     game.scene.removeNode(asteroid.asteroidNode);
 
     if (asteroid instanceof LargeAsteroid) {

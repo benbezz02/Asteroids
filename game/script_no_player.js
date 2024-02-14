@@ -69,6 +69,8 @@ var animateNoPlayerGame = function (gl, canvas) {
   var game = new Game(gl, scene)
   game.scene.removeNode(game.player.shipNode);
   game.player = null;
+  setbackground(game, '/assets/Pack2/3d-hyperspace-background-with-warp-tunnel-effect.jpg')
+
 
   var saucer1 = new LargeSaucer(game)
   var saucer2 = new LargeSaucer(game)

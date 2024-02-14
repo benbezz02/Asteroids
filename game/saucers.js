@@ -5,15 +5,23 @@ function Saucer(game, points, speed) {
 
     this.saucerNode = this.createSaucer(game);
     this.saucerNode.speed = speed;
-    this.saucerNode.angle = 0.5;
+    this.saucerNode.angle = 0.1 + Math.random() * 0.8;
 
     this.shootTimer = this.ShootCheck(game)
 };
 
 Saucer.prototype.createSaucer = function (game) {
 
+    var size = 0
+
+    if (this instanceof LargeSaucer) {
+        size = 0.4 + Math.random() * 0.2
+    } else if (this instanceof SmallSaucer) {
+        size = 0.2 + Math.random() * 0.2
+    }
+
     var quad = makeQuad(
-        [[-0.4, -0.4, 0], [0.4, -0.4, 0], [0.4, 0.4, 0], [-0.4, 0.4, 0]],
+        [[-size, -size, 0], [size, -size, 0], [size, size, 0], [-size, size, 0]],
         [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
         [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]);

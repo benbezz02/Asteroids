@@ -95,10 +95,7 @@ var animateGame = function (gl, canvas) {
         edgeChecker(game);
       }
     }
-
-    if (cancelAnimate === false) {
-      window.requestAnimationFrame(animate);
-    }
+    animationFrameId = window.requestAnimationFrame(animate)
   };
   // Go!
   animate();
