@@ -19,12 +19,13 @@
   <script type="text/javascript" src="game/saucers.js"></script>
   <script type="text/javascript" src="game/extras.js"></script>
   <script type="text/javascript" src="game/game.js"></script>
-  <script type="text/javascript" src="game/script_modern.js"></script>
+  <script type="text/javascript" src="game/script.js"></script>
   <script type="text/javascript" src="game/script_no_player.js"></script>
   <script type="text/javascript" src="attract/main_menu.js"></script>
   <script type="text/javascript" src="attract/scoreboard.js"></script>
 
   <script>
+    var cancelAnimate = false;
     var gameMode = null;
 
     const GameModes = {
@@ -75,6 +76,26 @@
     function saveUsername() {
       var username = document.getElementById("username").value;
       scoreboard[scoreboard.length-1].name = username
+    }
+
+    function reloadCanvas() {
+      var container = document.getElementById("canvases");
+
+      cancelAnimate = true
+
+      // Remove existing canvas (if any)
+      var oldCanvas = document.getElementById("canvas");
+      if (oldCanvas) {
+        container.removeChild(oldCanvas);
+      }
+
+      // Create a new canvas element
+      var newCanvas = document.createElement("canvas");
+      newCanvas.id = "canvas";
+      cancelAnimate = false
+
+      // Append the new canvas to the container
+      container.appendChild(newCanvas);
     }
   </script>
 
@@ -246,8 +267,10 @@
       <h3 id="select" class="hidden">Select Game Mode</h3>
       <button id="startButton" onclick="toggleSelect()">Start Game</button>
       <button id="exitButton" onclick="exit()">Exit</button>
-      <button id="classicButton" class="hidden" onclick="toggleSelect(), toggleMenu(), start_game_classic()">Classic</button>
-      <button id="modernButton" class="hidden" onclick="toggleSelect(), toggleMenu(), start_game_modern()">Modern</button>
+      <a href="render/classic.html">
+        <button id="classicButton" class="hidden" onclick="toggleSelect(), toggleMenu()">Classic</button>
+      </a>
+      <button id="modernButton" class="hidden" onclick="reloadCanvas(), toggleSelect(), toggleMenu(), start_game_modern()">Modern</button>
     </div>
     <div class="table">
       <h2>High Scores</h2>
@@ -283,7 +306,9 @@
     <button onclick="saveUsername()">Save</button>
     <button id="restartButton" onclick="toggleSelectGO()">Restart</button>
     <button id="mainmenuButton" onclick="toggleGameOver(), toggleMenu(), start()">Main Menu</button>
-    <button id="classicButton2" class="hidden" onclick="toggleSelectGO(), toggleGameOver(), start_game_classic()">Classic</button>
+    <a href="render/classic.html">
+      <button id="classicButton2" class="hidden" onclick="toggleSelectGO(), toggleGameOver()">Classic</button>
+    </a>
     <button id="modernButton2" class="hidden" onclick="toggleSelectGO(), toggleGameOver(), start_game_modern()">Modern</button>
   </div>
 </body>

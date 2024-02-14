@@ -3,8 +3,6 @@ var start = function () {
 }
 
 var start_game_classic = function () {
-    gameMode = GameModes.CLASSIC;
-
     var canvas = document.getElementById("canvas");
     canvas.style.position = "absolute";
     canvas.style.left = "50%";
@@ -20,11 +18,22 @@ var start_game_classic = function () {
     catch (e) { alert("No webGL compatibility detected!"); return false; }
 
     gameStateMachine.changeState(STATES.GAMEPLAY_MODE);
-    animateClassicGame(gl, canvas);
+    animateGame(gl, canvas);
 }
 
 var start_game_modern = function () {
-    gameMode = GameModes.MODERN;
+    /*
+    gameMode = GameModes.CLASSIC;
+
+    if (gameMode === GameModes.CLASSIC) {
+        var edge = vec4(0.0, 0.0, 0.0, 0.0);
+
+        if (dot(vNormal, vec3(0, 0, 1)) < 0.7) {
+            edge = vec4(1.0, 0.0, 0.0, 1.0);
+        };
+
+        gl_FragColor = edge;
+    }*/
 
     var canvas = document.getElementById("canvas");
     canvas.style.position = "absolute";
@@ -41,7 +50,7 @@ var start_game_modern = function () {
     catch (e) { alert("No webGL compatibility detected!"); return false; }
 
     gameStateMachine.changeState(STATES.GAMEPLAY_MODE);
-    animateModernGame(gl, canvas);
+    animateGame(gl, canvas);
 }
 
 var start_no_player = function () {

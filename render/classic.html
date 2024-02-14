@@ -218,7 +218,7 @@
         vec4 edge = vec4(0.0, 0.0, 0.0, 0.0);
 
         //if (dot(vNormal, vnLight) < 0.7)
-        if (dot(vNormal, vec3(0, 0, 1)) < 0.7)
+        if (dot(vNormal, vec3(0, 0, 1)) < 0.4)
         {
           edge = vec4(1.0, 0.0, 0.0, 1.0);
         };
@@ -235,7 +235,6 @@
       }
   </script>
   <script type="text/javascript" src="../statemachine.js"></script>
-  <script type="text/javascript" src="../support/coordinateGenerator.js"></script>
   <script type="text/javascript" src="../support/make.js"></script>
   <script type="text/javascript" src="../support/matrix.js"></script>
   <script type="text/javascript" src="../support/light.js"></script>
@@ -248,15 +247,19 @@
   <script type="text/javascript" src="../game/saucers.js"></script>
   <script type="text/javascript" src="../game/extras.js"></script>
   <script type="text/javascript" src="../game/game.js"></script>
-  <script type="text/javascript" src="../game/script_classic.js"></script>
+  <script type="text/javascript" src="../game/script.js"></script>
   <script type="text/javascript" src="../attract/main_menu.js"></script>
   <script type="text/javascript" src="../attract/scoreboard.js"></script>
 
 </head>
 
 <body style='margin:0px' onload='start(); start_game_classic()'>
-  <canvas id='canvas-classic' style='position: absolute; background-color: black;'>
+  <canvas id='canvas' style='position: absolute; background-color: black;'>
   </canvas>
+  <div id="data">
+    <h2 id="wave"></h2>
+    <h2 id="score"></h2>
+  </div>
 </body>
 
 </html>

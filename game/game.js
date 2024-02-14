@@ -161,21 +161,66 @@ Game.prototype.PlayerCollisionChecker = function () {
 
 Game.prototype.AsteroidCollisionChecker = function () {
     for (let i = 0; i < this.asteroidsArray.length; i++) {
-        for (let j = 0; j < this.player.lasersArray.length; j++) {
-            let distanceX = Math.pow(this.asteroidsArray[i].asteroidNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
-            let distanceY = Math.pow(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
-            let distance = Math.sqrt(distanceX + distanceY)
 
-            if (distance <= (0.141 + this.asteroidsArray[i].radius)) {
-                this.scene.removeNode(this.player.lasersArray[j].laserNode);
-                this.player.lasersArray.splice(j, 1);
-                j--;
+        var asteroid = this.asteroidsArray[i];
+        if (asteroid != null) {
+            for (let j = 0; j < this.player.lasersArray.length; j++) {
 
-                var asteroid = this.asteroidsArray[i];
-                this.asteroidsArray.splice(i, 1);
-                if (i != (this.asteroidsArray.length - 1)) { i--; }
 
-                AsteroidDestroyer(this, asteroid);
+                let distanceX = Math.pow(asteroid.asteroidNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
+                let distanceY = Math.pow(asteroid.asteroidNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
+                let distance = Math.sqrt(distanceX + distanceY)
+
+                if (distance <= (0.141 + asteroid.radius)) {
+                    this.scene.removeNode(this.player.lasersArray[j].laserNode);
+                    this.player.lasersArray.splice(j, 1);
+                    j--;
+
+                    AsteroidDestroyer(this, this.asteroidsArray[i]);
+                    this.asteroidsArray.splice(i, 1);
+                    i--;
+                }
+            }
+
+
+
+            for (let j = 0; j < this.saucersArray.length; j++) {
+                let distanceX = Math.pow(this.saucersArray[j].saucerNode.transform[12] - this.asteroidsArray[i].asteroidNode.transform[12], 2);
+                let distanceY = Math.pow(this.saucersArray[j].saucerNode.transform[13] - this.asteroidsArray[i].asteroidNode.transform[13], 2);
+                let distance = Math.sqrt(distanceX + distanceY)
+
+                if ((distance <= (this.asteroidsArray[i].radius + 0.5))) {
+                    SaucerDestroyer(this, this.saucersArray[j]);
+                    this.saucersArray.splice(j, 1);
+                    j--;
+
+                    var asteroid = this.asteroidsArray[i];
+                    this.asteroidsArray.splice(i, 1);
+                    if (i != (this.asteroidsArray.length - 1)) { i--; }
+
+                    AsteroidDestroyer(this, asteroid);
+                }
+
+                let saucer = this.saucersArray[j]
+
+                if (saucer != null) {
+                    for (let k = 0; k < saucer.lasersArray.length; k++) {
+                        let DistanceX = Math.pow(saucer.lasersArray[k].laserNode.transform[12] - this.asteroidsArray[i].asteroidNode.transform[12], 2);
+                        let DistanceY = Math.pow(saucer.lasersArray[k].laserNode.transform[13] - this.asteroidsArray[i].asteroidNode.transform[13], 2);
+                        let Distance = Math.sqrt(DistanceX + DistanceY)
+
+                        if ((Distance <= (this.asteroidsArray[i].radius + 0.141))) {
+                            AsteroidDestroyer(this, asteroid);
+                            this.asteroidsArray.splice(i, 1);
+                            i--;
+
+                            this.scene.removeNode(this.saucersArray[j].lasersArray[k].laserNode);
+                            this.saucersArray[j].lasersArray.splice(k, 1);
+                            k--;
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -183,21 +228,26 @@ Game.prototype.AsteroidCollisionChecker = function () {
 
 Game.prototype.SaucerCollisionChecker = function () {
     for (let i = 0; i < this.saucersArray.length; i++) {
-        for (let j = 0; j < this.player.lasersArray.length; j++) {
-            let distanceX = Math.pow(this.saucersArray[i].saucerNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
-            let distanceY = Math.pow(this.saucersArray[i].saucerNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
-            let distance = Math.sqrt(distanceX + distanceY)
 
-            if (distance <= (0.5 + 0.141)) {
-                this.scene.removeNode(this.player.lasersArray[j].laserNode);
-                this.player.lasersArray.splice(j, 1);
-                j--;
+        var saucer = this.saucersArray[i]
+        if (saucer != null) {
+            for (let j = 0; j < this.player.lasersArray.length; j++) {
+                let distanceX = Math.pow(saucer.saucerNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
+                let distanceY = Math.pow(saucer.saucerNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
+                let distance = Math.sqrt(distanceX + distanceY)
 
-                SaucerDestroyer(this, this.saucersArray[i]);
-                this.saucersArray.splice(i, 1);
-                i--;
+                if (distance <= (0.5 + 0.141)) {
+                    this.scene.removeNode(this.player.lasersArray[j].laserNode);
+                    this.player.lasersArray.splice(j, 1);
+                    j--;
+
+                    SaucerDestroyer(this, this.saucersArray[i]);
+                    this.saucersArray.splice(i, 1);
+                    i--;
+                }
             }
         }
+
     }
 }
 

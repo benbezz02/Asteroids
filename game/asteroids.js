@@ -21,7 +21,7 @@ Asteroid.prototype.createAsteroid = function (game) {
     var material = new Material();
 
     const asteroidImage = new Image();
-    asteroidImage.src = '/Asteroids/assets/Pack1/black-stone-texture.jpg';
+    asteroidImage.src = '/assets/Pack1/black-stone-texture.jpg';
     NewAsset();
 
     asteroidImage.onload = () => {
@@ -30,7 +30,7 @@ Asteroid.prototype.createAsteroid = function (game) {
     };
 
     material.setDiffuse([1, 1, 1]);
-    material.setShininess(8.0);
+    material.setShininess(5.0);
     material.setSpecular([1, 1, 1]);
     material.setAmbient([0.2, 0.2, 0.2]);
     material.bind(game.gl, game.scene.shaderProgram);

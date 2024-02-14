@@ -11,7 +11,7 @@ var AssetsLoaded = function () {
   return assetsLoaded;
 }
 
-var animateModernGame = function (gl, canvas) {
+var animateGame = function (gl, canvas) {
 
   var Vec3 = matrixHelper.vector3;
   var Mat4x4 = matrixHelper.matrix4;
@@ -23,7 +23,7 @@ var animateModernGame = function (gl, canvas) {
   var game = new Game(gl, scene);
 
   //Game Set UP
-  // setbackground(game, '/Asteroids/assets/Pack2/nebula.jpg')
+  setbackground(game, '/assets/Pack2/3d-hyperspace-background-with-warp-tunnel-effect.jpg')
 
   // Set up animation
   var lightTransform = Mat4x4.create();
@@ -96,7 +96,9 @@ var animateModernGame = function (gl, canvas) {
       }
     }
 
-    window.requestAnimationFrame(animate);
+    if (cancelAnimate === false) {
+      window.requestAnimationFrame(animate);
+    }
   };
   // Go!
   animate();

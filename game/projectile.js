@@ -20,7 +20,7 @@ Projectile.prototype.createProjectile = function (game) {
     var material = new Material();
 
     const projectileImage = new Image();
-    projectileImage.src = '/Asteroids/assets/Pack1/laser.png';
+    projectileImage.src = '/assets/Pack1/laser.png';
     NewAsset();
 
     projectileImage.onload = () => {

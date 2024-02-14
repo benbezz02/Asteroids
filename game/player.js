@@ -9,8 +9,8 @@ function Player(game) {
 
     this.lasersArray = new Array()
 
-    this.shipMaterial = createMaterialShip(game, '/Asteroids/assets/Pack2/Spaceship1(no boost).png')
-    this.shipMaterialBoost = createMaterialShip(game, '/Asteroids/assets/Pack2/Spaceship1.png')
+    this.shipMaterial = createMaterialShip(game, '/assets/Pack2/Spaceship1(no boost).png')
+    this.shipMaterialBoost = createMaterialShip(game, '/assets/Pack2/Spaceship1.png')
 
     this.shipNode = this.createShip(game);
     this.shipNode.speed = 0;

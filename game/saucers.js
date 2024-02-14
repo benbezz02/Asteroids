@@ -28,9 +28,9 @@ Saucer.prototype.createSaucer = function (game) {
 
     const saucerImage = new Image();
     if (this instanceof LargeSaucer) {
-        saucerImage.src = '/Asteroids/assets/Pack2/UFOs/Beholder/Beholder.png';
+        saucerImage.src = '/assets/Pack2/UFOs/Beholder/Beholder.png';
     } else if (this instanceof SmallSaucer) {
-        saucerImage.src = '/Asteroids/assets/Pack2/UFOs/Emissary/Emissary.png';
+        saucerImage.src = '/assets/Pack2/UFOs/Emissary/Emissary.png';
     }
     NewAsset()
 

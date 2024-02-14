@@ -50,7 +50,7 @@ var addHeart = function (game) {
     var material = new Material();
 
     const heartImage = new Image();
-    heartImage.src = '/Asteroids/assets/Pack2/redheart.png';
+    heartImage.src = '/assets/Pack2/redheart.png';
     NewAsset();
 
     heartImage.onload = () => {
