@@ -16,6 +16,8 @@ function Player(game) {
     this.shipNode.speed = 0;
     this.shipNode.angle = 0;
     this.shipNode.currentAngle = 0;
+
+    this.createAnimation()
 }
 
 Player.prototype.createShip = function (game) {

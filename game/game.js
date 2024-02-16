@@ -17,16 +17,13 @@ function Game(gl, scene) {
 
     this.wave = 0
     this.player = new Player(this)
-    this.player.createAnimation()
     this.lifesArray = new Array()
 
     this.asteroidsArray = new Array()
     this.saucersArray = new Array()
 
-    this.explosion1 = createMaterialExplosion(this, '/assets/Pack2/Explosion1.png');
-    this.explosion2 = createMaterialExplosion(this, '/assets/Pack2/Explosion3.png');
-    this.explosion3 = createMaterialExplosion(this, '/assets/Pack2/Explosion4.png');
-
+    this.explosionsMaterialArray = new Array()
+    fillExplosionsArray(this)
 }
 
 Game.prototype.runAllChecks = function () {
@@ -177,8 +174,11 @@ Game.prototype.AsteroidCollisionChecker = function () {
                 let distance = Math.sqrt(distanceX + distanceY)
 
                 if (distance <= (0.141 + asteroid.radius)) {
-                    //makeExplosion(this, this.player.lasersArray[j].laserNode)
-                    this.scene.removeNode(this.player.lasersArray[j].laserNode);
+                    if (asteroid instanceof SmallAsteroid) {
+                        makeExplosion(this, this.player.lasersArray[j].laserNode)
+                    } else {
+                        this.scene.removeNode(this.player.lasersArray[j].laserNode);
+                    }
                     this.player.lasersArray.splice(j, 1);
                     j--;
 

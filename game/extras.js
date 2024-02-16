@@ -69,16 +69,47 @@ var addHeart = function (game) {
 }
 
 var makeExplosion = function (game, node) {
-    node.nodeObject.material = game.explosion1;
-    setTimeout(function () {
-        node.nodeObject.material = game.explosio21;
-    }, 200);
-    setTimeout(function () {
-        node.nodeObject.material = game.explosion3;
-    }, 500);
-    setTimeout(function () {
-        game.scene.removeNode(node);
-    }, 700);
+    var x = node.transform[12]
+    var y = node.transform[13]
+    game.scene.removeNode(node);
+
+    var quad = makeQuad(
+        [[-0.5, -0.5, 0], [0.5, -0.5, 0], [0.5, 0.5, 0], [-0.5, 0.5, 0]],
+        [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
+        [[0, 0], [1, 0], [1, 1], [0, 1]]);
+
+    var model = new Model();
+    model.name = "explosion";
+    model.index = quad.index;
+    model.vertex = quad.vertex;
+    model.compile(game.scene);
+
+    var i = 0;
+    model.material = game.explosionsMaterialArray[i];
+
+    setInterval(function () {
+        model.material = game.explosionsMaterialArray[i];
+        i++;
+    }, 50);
+
+    var explosionNode = game.scene.addNode(game.lightNode, model, "explosionNode", Node.NODE_TYPE.MODEL);
+    explosionNode.transform[12] = x
+    explosionNode.transform[13] = y
+
+    setInterval(function () {
+        game.scene.removeNode(explosionNode);
+    }, 350);
+}
+
+var fillExplosionsArray = function (game) {
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion1.png'))
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion2.png'))
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion3.png'))
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion4.png'))
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion5.png'))
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion6.png'))
+    game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion7.png'))
 }
 
 var createMaterialExplosion = function (game, imagePath) {
