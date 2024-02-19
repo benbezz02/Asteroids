@@ -1,3 +1,4 @@
+// Used to not run anything until all Imgaes have been Loaded IN 
 var assetsCounter = 0;
 var assetsLoaded = 0;
 
@@ -20,9 +21,8 @@ var animateGame = function (gl, canvas) {
   scene = new Scene();
   scene.initialise(gl, canvas);
 
+  // Set up Game 
   var game = new Game(gl, scene);
-
-  //Game Set UP
   setbackground(game, '/assets/Pack2/3d-hyperspace-background-with-warp-tunnel-effect.jpg')
 
   // Set up animation
@@ -45,6 +45,7 @@ var animateGame = function (gl, canvas) {
   // Start timers
   game.SaucerSpawnChecker();
 
+  // Key Events for Movement
   function handleKeyDown(event) {
     spacebarCounter++;
     game.player.checkForMovement(event, game, spacebarCounter);
@@ -55,7 +56,7 @@ var animateGame = function (gl, canvas) {
   }
 
   var animate = function () {
-    if (game.player.lifes > 0) {
+    if (game.player.lives > 0) {
       game.runAllChecks()
 
       if (assetsCounter == assetsLoaded) {
@@ -74,6 +75,8 @@ var animateGame = function (gl, canvas) {
         game.EdgeChecker();
       }
     } else {
+
+      // Keeping the Game running in background of Game Over
       if (assetsCounter == assetsLoaded) {
         if (game.player.shipNode.name != null) {
           game.scene.removeNode(game.player.shipNode)

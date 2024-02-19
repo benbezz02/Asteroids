@@ -42,7 +42,7 @@ Asteroid.prototype.createAsteroid = function (game) {
 AsteroidSpawner = function (game) {
     var Mat4x4 = matrixHelper.matrix4;
 
-    for (var i = 0; i < (game.wave + 4); i++) {
+    for (var i = 1; i <= (game.wave + 4); i++) {
 
         var ang = 0
 

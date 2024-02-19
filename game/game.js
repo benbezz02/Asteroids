@@ -17,7 +17,7 @@ function Game(gl, scene) {
 
     this.wave = 0
     this.player = new Player(this)
-    this.lifesArray = new Array()
+    this.livesArray = new Array()
 
     this.asteroidsArray = new Array()
     this.saucersArray = new Array()
@@ -258,24 +258,24 @@ Game.prototype.SaucerCollisionChecker = function () {
 }
 
 Game.prototype.LivesChecker = function () {
-    if (this.lifesArray.length === 0) {
-        for (let i = 1; i <= this.player.lifes; i++) {
+    if (this.livesArray.length === 0) {
+        for (let i = 1; i <= this.player.lives; i++) {
             var heart = addHeart(this);
             matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + (i * 0.6), 5, 3]);
-            this.lifesArray.push(heart)
+            this.livesArray.push(heart)
         }
     }
 
     this.player.checkAdditionalLife();
 
-    if (this.player.lifes < this.lifesArray.length) {
-        var heart = this.lifesArray[this.lifesArray.length - 1]; // no idea why -1 alone is not working
+    if (this.player.lives < this.livesArray.length) {
+        var heart = this.livesArray[this.livesArray.length - 1]; // no idea why -1 alone is not working
         this.scene.removeNode(heart);
-        this.lifesArray.pop()
-    } else if (this.player.lifes > this.lifesArray.length) {
+        this.livesArray.pop()
+    } else if (this.player.lives > this.livesArray.length) {
         var heart = addHeart(this);
-        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lifes) * 0.6), 5, 3]);
-        this.lifesArray.push(heart)
+        matrixHelper.matrix4.makeTranslation(heart.transform, [-12 + ((this.player.lives) * 0.6), 5, 3]);
+        this.livesArray.push(heart)
     }
 }
 
