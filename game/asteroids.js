@@ -42,6 +42,7 @@ Asteroid.prototype.createAsteroid = function (game) {
 AsteroidSpawner = function (game) {
     var Mat4x4 = matrixHelper.matrix4;
 
+    // Spawning wave + 4 asteroids per wave
     for (var i = 1; i <= (game.wave + 4); i++) {
 
         var ang = 0
@@ -58,7 +59,7 @@ AsteroidSpawner = function (game) {
         game.asteroidsArray.push(asteroid)
     }
 
-
+    // Giving each asteoid their spin + movement
     for (var j = 0; j < game.asteroidsArray.length; j++) {
         let { x, y } = generateRandomCoordinatesOnEdge()
         game.asteroidsArray[j].asteroidNode.transform[12] = x
@@ -83,6 +84,7 @@ AsteroidSpawner = function (game) {
 AsteroidDestroyer = function (game, asteroid) {
     var Mat4x4 = matrixHelper.matrix4;
 
+    // Adding score
     game.player.score += asteroid.points
 
     x = asteroid.asteroidNode.transform[12]
@@ -91,6 +93,7 @@ AsteroidDestroyer = function (game, asteroid) {
     //makeExplosion(game, asteroid.asteroidNode)
     game.scene.removeNode(asteroid.asteroidNode);
 
+    // Producing two more upon destruction if need be
     if (asteroid instanceof LargeAsteroid) {
         var asteroid1 = new MediumAsteroid(game)
         var asteroid2 = new MediumAsteroid(game)

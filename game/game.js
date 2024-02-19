@@ -49,6 +49,7 @@ Game.prototype.EdgeChecker = function () {
     }
 
     // Checking edges
+    // Player
     this.player.shipNode.transform[12] = updateTransformOnEdge(
         this.player.shipNode.transform[12],
         width,
@@ -59,6 +60,7 @@ Game.prototype.EdgeChecker = function () {
         height,
     );
 
+    // Player Lasers
     for (let i = 0; i < this.player.lasersArray.length; i++) {
         if (this.player.lasersArray[i].laserNode.transform[12] >= width || this.player.lasersArray[i].laserNode.transform[12] <= -width) {
             this.scene.removeNode(this.player.lasersArray[i].laserNode);
@@ -71,6 +73,7 @@ Game.prototype.EdgeChecker = function () {
         }
     }
 
+    // Asteroids
     for (var asteroid of this.asteroidsArray) {
         asteroid.asteroidNode.transform[12] = updateTransformOnEdge(
             asteroid.asteroidNode.transform[12],
@@ -83,6 +86,7 @@ Game.prototype.EdgeChecker = function () {
         );
     }
 
+    // Saucers and Saucer Lasers
     for (var saucer of this.saucersArray) {
         saucer.saucerNode.transform[13] = updateTransformOnEdge(
             saucer.saucerNode.transform[13],
@@ -117,6 +121,7 @@ Game.prototype.SaucerSpawnChecker = function () {
 }
 
 Game.prototype.PlayerCollisionChecker = function () {
+    // Asteroid Check
     for (let i = 0; i < this.asteroidsArray.length; i++) {
         let distanceX = Math.pow(this.asteroidsArray[i].asteroidNode.transform[12] - this.player.shipNode.transform[12], 2);
         let distanceY = Math.pow(this.asteroidsArray[i].asteroidNode.transform[13] - this.player.shipNode.transform[13], 2);
@@ -130,6 +135,7 @@ Game.prototype.PlayerCollisionChecker = function () {
         }
     }
 
+    // Saucer Check
     for (let i = 0; i < this.saucersArray.length; i++) {
         let distanceX = Math.pow(this.saucersArray[i].saucerNode.transform[12] - this.player.shipNode.transform[12], 2);
         let distanceY = Math.pow(this.saucersArray[i].saucerNode.transform[13] - this.player.shipNode.transform[13], 2);
@@ -144,6 +150,7 @@ Game.prototype.PlayerCollisionChecker = function () {
 
         let saucer = this.saucersArray[i]
 
+        // Saucer Laser Check
         for (let j = 0; j < saucer.lasersArray.length; j++) {
             let DistanceX = Math.pow(saucer.lasersArray[j].laserNode.transform[12] - this.player.shipNode.transform[12], 2);
             let DistanceY = Math.pow(saucer.lasersArray[j].laserNode.transform[13] - this.player.shipNode.transform[13], 2);
@@ -166,6 +173,7 @@ Game.prototype.AsteroidCollisionChecker = function () {
 
         var asteroid = this.asteroidsArray[i];
         if (asteroid != null) {
+            // Player Lasers Check
             for (let j = 0; j < this.player.lasersArray.length; j++) {
 
 
@@ -189,7 +197,7 @@ Game.prototype.AsteroidCollisionChecker = function () {
             }
 
 
-
+            // Saucers and Saucer Lasers Check
             for (let j = 0; j < this.saucersArray.length; j++) {
                 let distanceX = Math.pow(this.saucersArray[j].saucerNode.transform[12] - this.asteroidsArray[i].asteroidNode.transform[12], 2);
                 let distanceY = Math.pow(this.saucersArray[j].saucerNode.transform[13] - this.asteroidsArray[i].asteroidNode.transform[13], 2);
@@ -237,6 +245,7 @@ Game.prototype.SaucerCollisionChecker = function () {
 
         var saucer = this.saucersArray[i]
         if (saucer != null) {
+            // Player Lasers Check
             for (let j = 0; j < this.player.lasersArray.length; j++) {
                 let distanceX = Math.pow(saucer.saucerNode.transform[12] - this.player.lasersArray[j].laserNode.transform[12], 2);
                 let distanceY = Math.pow(saucer.saucerNode.transform[13] - this.player.lasersArray[j].laserNode.transform[13], 2);
@@ -258,6 +267,7 @@ Game.prototype.SaucerCollisionChecker = function () {
 }
 
 Game.prototype.LivesChecker = function () {
+    // Game Start
     if (this.livesArray.length === 0) {
         for (let i = 1; i <= this.player.lives; i++) {
             var heart = addHeart(this);
@@ -268,6 +278,7 @@ Game.prototype.LivesChecker = function () {
 
     this.player.checkAdditionalLife();
 
+    // Lost + Gained Life
     if (this.player.lives < this.livesArray.length) {
         var heart = this.livesArray[this.livesArray.length - 1]; // no idea why -1 alone is not working
         this.scene.removeNode(heart);
@@ -280,6 +291,7 @@ Game.prototype.LivesChecker = function () {
 }
 
 Game.prototype.ScoreWaveChecker = function () {
+    // Top Right HUD
     document.getElementById('wave').innerText = ("Wave " + this.wave);
     document.getElementById('score').innerText = this.player.score;
 }

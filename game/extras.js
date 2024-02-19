@@ -31,6 +31,8 @@ var setbackground = function (game, imagePath) {
     model.material = material;
 
     var backgroundNode = scene.addNode(game.lightNode, model, "backgroundNode", Node.NODE_TYPE.MODEL);
+
+    // Moving backgroundNode to the back
     matrixHelper.matrix4.makeTranslation(backgroundNode.transform, [0, 0, -10]);
 }
 
@@ -88,6 +90,7 @@ var makeExplosion = function (game, node) {
     var i = 0;
     model.material = game.explosionsMaterialArray[i];
 
+    // Creating animation
     setInterval(function () {
         model.material = game.explosionsMaterialArray[i];
         i++;
@@ -97,12 +100,14 @@ var makeExplosion = function (game, node) {
     explosionNode.transform[12] = x
     explosionNode.transform[13] = y
 
+    // Removing the node to not interfere
     setInterval(function () {
         game.scene.removeNode(explosionNode);
     }, 350);
 }
 
 var fillExplosionsArray = function (game) {
+    // Pre loading images for quick animation
     game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion1.png'))
     game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion2.png'))
     game.explosionsMaterialArray.push(createMaterialExplosion(game, '/assets/Pack2/Explosion3.png'))

@@ -9,6 +9,7 @@ function Player(game) {
 
     this.lasersArray = new Array()
 
+    // Preloading for fast animation
     this.shipMaterial = createMaterialShip(game, '/assets/Pack2/Spaceship1(no boost).png')
     this.shipMaterialBoost = createMaterialShip(game, '/assets/Pack2/Spaceship1.png')
 
@@ -70,6 +71,8 @@ Player.prototype.checkForMovement = function (event, game, spacebarCounter) {
     switch (event.keyCode) {
         // Space Bar
         case 32: {
+            // Multiple Space Bar presses recogized with 1 press
+            // So it is only shot once when it is recognised the first time
             if (spacebarCounter === 1) {
                 this.fireProjectile(game);
             }
@@ -126,6 +129,7 @@ Player.prototype.fireProjectile = function (game) {
 
 Player.prototype.cancelMovement = function (event, game) {
     switch (event.keyCode) {
+        // Up Arrow or W
         case 38:
         case 87: {
             this.shipNode.speed = 0
@@ -151,6 +155,7 @@ Player.prototype.cancelMovement = function (event, game) {
 }
 
 Player.prototype.getsHit = function () {
+    // Hyperspace Jump feature
     if (this.lives === 1 && this.hypespacejump) {
         this.hyperspaceJump()
         this.hypespacejump = false;
@@ -158,8 +163,9 @@ Player.prototype.getsHit = function () {
     }
 
     this.lives--
-    this.isHittable = false;
 
+    // Make player unhittable for 1 sec
+    this.isHittable = false;
     setTimeout(() => {
         this.isHittable = true;
     }, 1000);
@@ -174,6 +180,7 @@ Player.prototype.checkAdditionalLife = function () {
 }
 
 Player.prototype.hyperspaceJump = function () {
+    // Teleport with the boundaries
     this.shipNode.transform[12] = (Math.random() * 28.8 - 14.4).toFixed(1);
     this.shipNode.transform[13] = (Math.random() * 13.8 - 6.9).toFixed(1);
 }

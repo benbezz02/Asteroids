@@ -58,8 +58,10 @@ Saucer.prototype.createSaucer = function (game) {
 }
 
 Saucer.prototype.ShootCheck = function (game) {
+    // creation of interval
     var timerInterval = setInterval(() => {
         if (BernoulliTrial()) {
+            // Random for Large at player for Small
             if (this instanceof SmallSaucer) {
                 var deltaY = game.player.shipNode.transform[13] - this.saucerNode.transform[13];
                 var deltaX = game.player.shipNode.transform[12] - this.saucerNode.transform[12];
